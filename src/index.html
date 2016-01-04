@@ -1,0 +1,31 @@
+<html>
+<head>
+    <script src="/node_modules/angular/angular.min.js"></script>
+    <script src="/node_modules/angular-resource/angular-resource.min.js"></script>
+    <script src="/node_modules/angular-mocks/angular-mocks.js"></script>
+    <script src="/js/todo.js"></script>
+    <script src="/js/todo/todo.service.js"></script>
+    <script src="/js/todo/todo.controller.js"></script>
+    <script src="/mocking/ng-apimock.js"></script>
+    <title>Todo</title>
+    <link rel="shortcut icon" type="image/png" href="/images/favicon.ico"/>
+</head>
+<body ng-app="todo">
+<h2>Todo</h2>
+<div ng-controller="TodoController as vm" id="todo">
+    <span><span>{{vm.remaining()}}</span> of <span>{{vm.todos.length}}</span> remaining</span>
+    [ <a href="" ng-click="vm.archive()">archive</a> ][ <a href="" ng-click="vm.fetchTodos()">refresh</a> ]
+    <ul class="unstyled">
+        <li ng-repeat="todo in vm.todos">
+            <input id="{{todo.description}}" type="checkbox" ng-model="todo.completed" ng-click="vm.update(todo)">
+            <span class="done-{{todo.completed}}">{{todo.description}}</span>
+        </li>
+    </ul>
+    <form ng-submit="vm.addTodo()">
+        <input type="text" ng-model="vm.description"  size="30"
+               placeholder="add new todo here">
+        <input class="btn-primary" type="submit" value="add">
+    </form>
+</div>
+</body>
+</html>
