@@ -1,0 +1,14 @@
+{
+  "expression": "/api/todos",
+  "method": "POST",
+  "responses": {
+    "passThrough": {},
+    "success": {
+      "status": 200
+    },
+    "oops": {
+      "status": 409,
+      "data": "duplicate"
+    }
+  }
+}

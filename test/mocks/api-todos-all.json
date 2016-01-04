@@ -1,0 +1,76 @@
+
+{
+  "expression": "/api/todos",
+  "method": "GET",
+  "responses": {
+    "passThrough": {},
+    "initial": {
+      "data": [
+        {
+          "description": "do something",
+          "completed": false
+        },
+        {
+          "description": "do something else",
+          "completed": true
+        },
+        {
+          "description": "do something different",
+          "completed": false
+        }
+      ]
+    },
+    "afterAdd": {
+      "data": [
+        {
+          "description": "do something",
+          "completed": false
+        },
+        {
+          "description": "do something else",
+          "completed": true
+        },
+        {
+          "description": "do something different",
+          "completed": false
+        },
+        {
+          "description": "another todo",
+          "completed": false
+        }
+      ]
+    },
+    "afterArchive": {
+      "data": [
+        {
+          "description": "do something",
+          "completed": false
+        },
+        {
+          "description": "do something different",
+          "completed": false
+        },
+        {
+          "description": "another todo",
+          "completed": false
+        }
+      ]
+    },
+    "afterCheck": {
+      "data": [
+        {
+          "description": "do something",
+          "completed": false
+        },
+        {
+          "description": "do something different",
+          "completed": false
+        }
+      ]
+    },
+    "oops": {
+      "status": 409,
+      "data": []
+    }
+  }
+}

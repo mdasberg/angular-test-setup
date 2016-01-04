@@ -1,0 +1,13 @@
+{
+  "expression": "api/todos.*",
+  "method": "DELETE",
+  "responses": {
+    "passThrough": {},
+    "success": {
+      "status": 200
+    },
+    "oops": {
+      "status": 500
+    }
+  }
+}

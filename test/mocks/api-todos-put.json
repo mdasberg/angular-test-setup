@@ -1,0 +1,13 @@
+{
+  "expression": "/api/todos",
+  "method": "PUT",
+  "responses": {
+    "passThrough": {},
+    "success": {
+      "status": 200
+    },
+    "oops": {
+      "status": 500
+    }
+  }
+}
