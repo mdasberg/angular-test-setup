@@ -6,8 +6,8 @@ var path = require('path'),
 
 
 describe('Happy flow', function () {
-    var TodoPO = require('../po/todo.po');
-    var todoPo;
+    var TodoPage = require('../po/todoPage.po');
+    var page;
     beforeAll(function () {
         ngApimock.selectScenario(require(basePath + '/test/mocks/api-todos-all.json'), 'initial');
         ngApimock.selectScenario(require(basePath + '/test/mocks/api-todos-post.json'), 'success');
@@ -15,42 +15,49 @@ describe('Happy flow', function () {
         ngApimock.selectScenario(require(basePath + '/test/mocks/api-todos-put.json'), 'success');
         ngApimock.addMockModule();
         browser.get('/');
-        todoPo = new TodoPO(by.id('todo'));
+        page = new TodoPage(element(by.id('todo')));
     });
 
     it('should show all todos', function () {
-        expect(todoPo.count()).toBe('3');
+        expect(page.todos.count()).toBe(3);
+        expect(page.todos.get(0).description).toBe('do something');
+        expect(page.todos.get(1).description).toBe('do something else');
+        expect(page.todos.get(2).description).toBe('do something different')
     });
 
-    it('should show remaining', function () {
-        expect(todoPo.remaining()).toBe('2');
+    it('should show the total number of todos', function() {
+        expect(page.information.total).toBe('3');
+    });
+
+    it('should show the total number of remaining uncompleted todos', function () {
+        expect(page.information.remaining).toBe('2');
     });
 
     it('should add a todo', function () {
-        expect(todoPo.count()).toBe('3');
+        expect(page.todos.count()).toBe(3);
 
-        todoPo.add('another todo').then(function () {
+        page.actions.add('another todo').then(function () {
             ngApimock.selectScenario(require(basePath + '/test/mocks/api-todos-all.json'), 'afterAdd');
         });
 
-        expect(todoPo.count()).toBe('4');
+        expect(page.todos.count()).toBe(4);
     });
 
     it('should archive completed todo', function () {
-        expect(todoPo.count()).toBe('4');
+        expect(page.todos.count()).toBe(4);
 
-        todoPo.archive().then(function () {
+        page.actions.archive().then(function () {
             ngApimock.selectScenario(require(basePath + '/test/mocks/api-todos-all.json'), 'afterArchive');
         });
-        expect(todoPo.count()).toBe('3');
+        expect(page.todos.count()).toBe(3);
     });
 
     it('should mark a todo as completed', function () {
-        expect(todoPo.remaining()).toBe('3');
+        expect(page.information.remaining).toBe('3');
 
-        todoPo.check('another todo').then(function () {
+        page.todos.get(2).check().then(function () {
             ngApimock.selectScenario(require(basePath + '/test/mocks/api-todos-all.json'), 'afterCheck');
         });
-        expect(todoPo.remaining()).toBe('2');
+        expect(page.information.remaining).toBe('2');
     });
 });

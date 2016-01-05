@@ -6,8 +6,8 @@ var path = require('path'),
 
 
 describe('Unhappy flow', function () {
-    var TodoPO = require('../po/todo.po');
-    var todoPo;
+    var TodoPage = require('../po/todoPage.po');
+    var page;
     beforeAll(function () {
         ngApimock.selectScenario(require(basePath + '/test/mocks/api-todos-all.json'), 'oops');
         ngApimock.selectScenario(require(basePath + '/test/mocks/api-todos-post.json'), 'oops');
@@ -15,42 +15,50 @@ describe('Unhappy flow', function () {
         ngApimock.selectScenario(require(basePath + '/test/mocks/api-todos-delete.json'), 'oops');
         ngApimock.addMockModule();
         browser.get('/');
-        todoPo = new TodoPO(by.id('todo'));
+        page = new TodoPage(element(by.id('todo')));
     });
 
-    it('should not show any todos when the backend returns anything other than a status 200', function () {
-        expect(todoPo.count()).toBe('0');
-    });
-
-    it('should not show any remaining todos when the backend returns anything other than a status 200', function () {
-        expect(todoPo.remaining()).toBe('0');
-    });
-
-    it('should not add a todo when the backend returns anything other than a status 200', function () {
-        expect(todoPo.count()).toBe('0');
-
-        todoPo.add('another todo').then(function () {
-            ngApimock.selectScenario(require(basePath + '/test/mocks/api-todos-all.json'), 'oops');
+    describe('when the backend returns anything other than a status 200', function() {
+        it('should not show any todo', function () {
+            expect(page.todos.count()).toBe(0);
         });
 
-        expect(todoPo.count()).toBe('0');
-    });
+        it('should show the total number of todos', function() {
+            expect(page.information.total).toBe('0');
+        });
 
-    it('should not complete a todo when the backend returns anything other than a status 200', function () {
-        ngApimock.selectScenario(require(basePath + '/test/mocks/api-todos-all.json'), 'initial');
-        todoPo.refresh();
-        expect(todoPo.count()).toBe('3');
+        it('should show the total number of remaining uncompleted todos', function () {
+            expect(page.information.remaining).toBe('0');
+        });
 
-        todoPo.check('do something else');
+        it('should not add a todo', function () {
+            expect(page.todos.count()).toBe(0);
 
-        expect(todoPo.count()).toBe('3');
-    });
+            page.actions.add('another todo').then(function () {
+                ngApimock.selectScenario(require(basePath + '/test/mocks/api-todos-all.json'), 'oops');
+            });
 
-    it('should not archive a todo when the backend returns anything other than a status 200', function () {
-        expect(todoPo.count()).toBe('3');
+            expect(page.todos.count()).toBe(0);
+        });
 
-        todoPo.archive();
+        it('should not archive completed todo', function () {
+            ngApimock.selectScenario(require(basePath + '/test/mocks/api-todos-all.json'), 'initial');
+            page.actions.refresh();
 
-        expect(todoPo.count()).toBe('3');
+            expect(page.todos.count()).toBe(3);
+
+            page.actions.archive();
+
+            expect(page.todos.count()).toBe(3);
+        });
+
+        it('should not mark a todo as completed', function () {
+
+            expect(page.information.remaining).toBe('2');
+
+            page.todos.get(2).check();
+
+            expect(page.information.remaining).toBe('2');
+        });
     });
 });

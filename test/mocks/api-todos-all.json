@@ -65,6 +65,10 @@
         {
           "description": "do something different",
           "completed": false
+        },
+        {
+          "description": "another todo",
+          "completed": true
         }
       ]
     },
