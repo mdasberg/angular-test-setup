@@ -7,7 +7,7 @@ module.exports = function (grunt) {
 
     var serveStatic = require('serve-static'),
         path = require('path'),
-        tmp = '.tmp'
+        tmp = '.tmp';
 
     var config = {
         hosts: {
@@ -43,7 +43,7 @@ module.exports = function (grunt) {
         portPick: {
             options: {
                 port: 9900,
-                limit: 9,
+                limit: 9
             },
             connectSource: {
                 targets: [
@@ -102,6 +102,7 @@ module.exports = function (grunt) {
                     middleware: function (connect) {
                         return [
                             connect().use('/node_modules', serveStatic(__dirname + '/node_modules')),
+                            connect().use('/mocking', serveStatic(config.paths.tmp + '/mocking')),
                             connect().use('/js', serveStatic(config.paths.instrumented + '/src/js')),
                             connect().use('/', serveStatic(config.paths.src)),
                             connect().use('/', serveStatic(config.paths.test + '/protractor')),
@@ -149,7 +150,7 @@ module.exports = function (grunt) {
         protractor_coverage: {
             options: {
                 keepAlive: true,
-                noColor: false,
+                noColor: false
             },
             jasmine2: {
                 options: {
