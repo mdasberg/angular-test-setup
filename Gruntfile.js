@@ -65,6 +65,12 @@ module.exports = function (grunt) {
                 targets: [
                     'protractor_coverage.jasmine2.options.collectorPort'
                 ]
+            },
+            protractorCucumber: {
+                targets: [
+                    'protractor_coverage.cucumber.options.collectorPort',
+                    'protractor_coverage.cucumber.options.args.params.collectorPort'
+                ]
             }
         },
         connect: {
@@ -128,6 +134,18 @@ module.exports = function (grunt) {
                 }
             }
         },
+        jshint: {
+            report: {
+                options: {
+                    jshintrc: '.jshintrc',
+                    reporter: require('jshint-stylish')
+                },
+                files: {
+                    src: ['<%= config.paths.src %>/**/*.js']
+                }
+            }
+
+        },
         protractor_coverage: {
             options: {
                 keepAlive: true,
@@ -150,13 +168,33 @@ module.exports = function (grunt) {
                     }
                 },
                 configFile: '<%=config.paths.test%>/protractor/config/protractor-jasmine2.conf.js'
+            },
+            cucumber: {
+                options: {
+                    collectorPort: 0,
+                    noInject: true,
+                    coverageDir: '<%=config.paths.results%>/protractor-coverage/cucumber',
+                    args: {
+                        seleniumAddress: '<%=config.hosts.seleniumAddress%>',
+                        params: {
+                            resultsDir: '<%=config.paths.results%>/protractor/cucumber',
+                            testDir: '<%=config.paths.test%>/protractor',
+                            collectorPort: 0
+                        },
+                        baseUrl: 'http://<%=config.hosts.fqdn%>:<%= connect.test.options.port %>',
+                        specs: [
+                            '<%=config.paths.test%>/protractor/specs/**/*.feature'
+                        ]
+                    }
+                },
+                configFile: '<%=config.paths.test%>/protractor/config/protractor-cucumber.conf.js'
             }
         },
         makeReport: {
-            src: '<%=config.paths.results%>/protractor-coverage/jasmine2/*.json',
+            src: '<%=config.paths.results%>/protractor-coverage/**/*.json',
             options: {
                 type: 'lcov',
-                dir: '<%=config.paths.results%>/protractor-coverage/jasmine2',
+                dir: '<%=config.paths.results%>/protractor-coverage',
                 print: 'detail'
             }
         },
@@ -185,6 +223,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('test', 'Execute tests.', [
         'force:on',
+        'jshint',
         'instrument',
         'connect:test',
         'protractor_coverage',
