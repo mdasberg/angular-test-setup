@@ -18,7 +18,7 @@
     <ul class="unstyled">
         <li ng-repeat="todo in vm.todos">
             <input id="{{todo.description}}" type="checkbox" ng-model="todo.completed" ng-click="vm.update(todo)">
-            <span class="done-{{todo.completed}}">{{todo.description}}</span>
+            <span class="done-{{todo.completed}}"><span ng-bind="todo.description"></span></span>
         </li>
     </ul>
     <form ng-submit="vm.addTodo()">

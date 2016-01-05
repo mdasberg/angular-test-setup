@@ -65,7 +65,7 @@
         }
     }
 
-    TodoController.$inject = ['todoService', '$q']
+    TodoController.$inject = ['todoService', '$q'];
 
     /** Todo controller. */
     angular
