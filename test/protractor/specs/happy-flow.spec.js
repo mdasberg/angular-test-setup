@@ -1,9 +1,7 @@
 'use strict';
 
 var path = require('path'),
-    basePath = path.resolve('.'),
-    ngApimock = require(basePath + '/.tmp/mocking/protractor.mock');
-
+    basePath = path.resolve('.');
 
 describe('Happy flow', function () {
     var TodoPage = require('../po/todoPage.po');
