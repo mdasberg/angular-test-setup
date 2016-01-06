@@ -145,7 +145,16 @@ module.exports = function (grunt) {
                     src: ['<%= config.paths.src %>/**/*.js']
                 }
             }
-
+        },
+        karma: {
+            options: {
+                singleRun: true,
+                reporters: ['progress', 'coverage', 'junit']
+            },
+            unit: {
+                basePath: process.cwd(),
+                configFile: '<%=config.paths.test %>/karma/config/karma.conf.js'
+            }
         },
         protractor_coverage: {
             options: {
