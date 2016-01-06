@@ -7,11 +7,11 @@
                 files: [
                     'node_modules/angular/angular.js',
                     'node_modules/angular-resource/angular-resource.js',
-                    'node_modules/angular-mock/angular-mocks.js',
+                    'node_modules/angular-mocks/angular-mocks.js',
                     'src/js/*.js',
                     'src/js/**/*.js',
                     'src/partials/**/*.html',
-                    'test/unit/**/*.js'
+                    'test/karma/specs/**/*.js'
                 ],
                 exclude: [],
                 plugins: [

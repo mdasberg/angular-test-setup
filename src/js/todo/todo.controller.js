@@ -51,6 +51,8 @@
             });
             $q.all(archived).then(function () {
                 vm.fetchTodos();
+            }, function(){
+                vm.fetchTodos();
             });
         };
 

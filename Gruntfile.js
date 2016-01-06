@@ -234,6 +234,7 @@ module.exports = function (grunt) {
     grunt.registerTask('test', 'Execute tests.', [
         'force:on',
         'jshint',
+        'karma',
         'instrument',
         'connect:test',
         'protractor_coverage',
