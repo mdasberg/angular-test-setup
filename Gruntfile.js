@@ -71,11 +71,12 @@ module.exports = function (grunt) {
 
     jasmine2local.options.args.seleniumAddress = '<%=config.hosts.seleniumAddress%>';
     jasmine2local.configFile= '<%=config.paths.test%>/protractor/config/protractor-jasmine2.conf.js';
+    jasmine2travis.options.args.seleniumAddress = 'ondemand.saucelabs.com:80/wd/hub';
     jasmine2travis.configFile= '<%=config.paths.test%>/protractor/config/protractor-jasmine2.travis.conf.js';
     cucumberlocal.options.args.seleniumAddress = '<%=config.hosts.seleniumAddress%>';
     cucumberlocal.configFile= '<%=config.paths.test%>/protractor/config/protractor-cucumber.conf.js',
+    cucumbertravis.options.args.seleniumAddress = 'ondemand.saucelabs.com:80/wd/hub';
     cucumbertravis.configFile= '<%=config.paths.test%>/protractor/config/protractor-cucumber.travis.conf.js';
-
 
     grunt.initConfig({
         config: config,
@@ -264,7 +265,7 @@ module.exports = function (grunt) {
             'instrument',
             'connect:test',
             'protractor_coverage:jasmine2' +environment,
-            'protractor_coverage:cucumber' +environment,
+            //'protractor_coverage:cucumber' +environment,
             'makeReport',
             'force:reset'
         ]);
