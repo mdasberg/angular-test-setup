@@ -10,6 +10,7 @@ module.exports = function (grunt) {
         tmp = '.tmp';
 
     var config = {
+        environment: 'local',
         hosts: {
             runtime: 'localhost',
             fqdn: 'localhost',
@@ -123,7 +124,7 @@ module.exports = function (grunt) {
                 }
             }
         },
-        ngApimock : {
+        ngApimock: {
             options: {
                 defaultOutputDir: '<%= config.paths.tmp %>/mocking',
                 defaultPassThrough: []
@@ -243,10 +244,24 @@ module.exports = function (grunt) {
         'force:reset'
     ]);
 
-    grunt.registerTask('default', 'Default task', function (suite) {
-        grunt.task.run([
-            'prepare',
-            'test'
-        ]);
+    grunt.registerTask('default', 'Default task', [
+        'local'
+    ]);
+
+    grunt.registerTask('environment', 'Set the environment', function(environment) {
+        grunt.log.writeln(grunt.config.get('environment'));
+        grunt.config.set('environment', environment);
+        grunt.log.writeln(grunt.config.get('environment'));
     });
+
+    grunt.registerTask('local', 'Run tests locally', [
+        'prepare',
+        'test'
+    ]);
+    grunt.registerTask('travis', 'Run tests on Travis CI', [
+        'prepare',
+        'environment:travis',
+        'test'
+    ]);
+
 };

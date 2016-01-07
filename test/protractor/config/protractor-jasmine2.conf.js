@@ -1,11 +1,18 @@
 var jasmineReporters = require('jasmine-reporters'),
     grunt = require('grunt'),
+    environment = grunt.config.get('environment'),
     mkdirp = require('mkdirp'),
     path = require('path'),
     args = require('optimist').argv,
     config = require(__dirname + '/protractor-base.conf').config;
 
 config.framework = 'jasmine2';
+
+if(environment === 'travis') {
+    config.sauceUser = process.env.SAUCE_USERNAME;
+    config.sauceKey = process.env.SAUCE_ACCESS_KEY;
+    delete config.seleniumAddress;
+}
 
 config.onPrepare = function () {
     // Disable animations so e2e tests run more quickly
