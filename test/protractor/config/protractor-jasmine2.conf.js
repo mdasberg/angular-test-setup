@@ -11,7 +11,6 @@ config.framework = 'jasmine2';
 if(environment === 'travis') {
     config.sauceUser = process.env.SAUCE_USERNAME;
     config.sauceKey = process.env.SAUCE_ACCESS_KEY;
-    delete config.seleniumAddress;
 
     config.multiCapabilities.forEach(function (capability) {
         capability['tunnel-identifier'] = process.env.TRAVIS_JOB_NUMBER;
