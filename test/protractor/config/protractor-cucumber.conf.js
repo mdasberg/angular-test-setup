@@ -49,6 +49,4 @@ config.cucumberOpts = {
     format: 'summary'
 };
 
-grunt.log.writeln( grunt.config.get('environment') === 'travis')
-grunt.log.writeln(JSON.stringify(config));
 exports.config = config;

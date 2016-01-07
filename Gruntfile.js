@@ -6,6 +6,7 @@ module.exports = function (grunt) {
     require('time-grunt')(grunt);
 
     var serveStatic = require('serve-static'),
+        lodash = require('lodash'),
         path = require('path'),
         tmp = '.tmp';
 
@@ -64,18 +65,16 @@ module.exports = function (grunt) {
             configFile: '<%=config.paths.test%>/protractor/config/protractor-cucumber.conf.js'
         };
 
-    var jasmine2local = jasmine2,
-        jasmine2travis = jasmine2,
-        cucumberlocal = cucumber,
-        cucumbertravis = cucumber;
+    var jasmine2local = lodash.clone(jasmine2),
+        jasmine2travis = lodash.clone(jasmine2),
+        cucumberlocal = lodash.clone(cucumber),
+        cucumbertravis = lodash.clone(cucumber);
 
     jasmine2local.options.args.seleniumAddress = '<%=config.hosts.seleniumAddress%>';
     jasmine2local.configFile= '<%=config.paths.test%>/protractor/config/protractor-jasmine2.conf.js';
-    jasmine2travis.options.args.sauceSeleniumAddress = 'http://ondemand.saucelabs.com:80/wd/hub';
     jasmine2travis.configFile= '<%=config.paths.test%>/protractor/config/protractor-jasmine2.travis.conf.js';
     cucumberlocal.options.args.seleniumAddress = '<%=config.hosts.seleniumAddress%>';
     cucumberlocal.configFile= '<%=config.paths.test%>/protractor/config/protractor-cucumber.conf.js',
-    cucumbertravis.options.args.sauceSeleniumAddress = 'http://ondemand.saucelabs.com:80/wd/hub';
     cucumbertravis.configFile= '<%=config.paths.test%>/protractor/config/protractor-cucumber.travis.conf.js';
 
     grunt.initConfig({
