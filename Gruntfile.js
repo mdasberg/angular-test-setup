@@ -65,10 +65,16 @@ module.exports = function (grunt) {
         };
 
     var jasmine2local = jasmine2,
-        cucumberlocal = cucumber;
+        jasmine2travis = jasmine2,
+        cucumberlocal = cucumber,
+        cucumbertravis = cucumber;
 
     jasmine2local.options.args.seleniumAddress = '<%=config.hosts.seleniumAddress%>';
+    jasmine2local.configFile= '<%=config.paths.test%>/protractor/config/protractor-jasmine2.conf.js';
+    jasmine2travis.configFile= '<%=config.paths.test%>/protractor/config/protractor-jasmine2.travis.conf.js';
     cucumberlocal.options.args.seleniumAddress = '<%=config.hosts.seleniumAddress%>';
+    cucumberlocal.configFile= '<%=config.paths.test%>/protractor/config/protractor-cucumber.conf.js',
+    cucumbertravis.configFile= '<%=config.paths.test%>/protractor/config/protractor-cucumber.travis.conf.js';
 
 
     grunt.initConfig({
@@ -211,9 +217,9 @@ module.exports = function (grunt) {
                 noColor: false
             },
             jasmine2local: jasmine2local,
-            jasmine2travis: jasmine2,
+            jasmine2travis: jasmine2travis,
             cucumberlocal: cucumberlocal,
-            cucumbertravis: cucumber
+            cucumbertravis: cucumbertravis
         },
         makeReport: {
             src: '<%=config.paths.results%>/protractor-coverage/**/*.json',
@@ -278,7 +284,6 @@ module.exports = function (grunt) {
     ]);
     grunt.registerTask('travis', 'Run tests on Travis CI', [
         'prepare',
-        'environment:travis',
         'test:travis'
     ]);
 

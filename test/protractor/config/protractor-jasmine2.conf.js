@@ -3,9 +3,7 @@ var jasmineReporters = require('jasmine-reporters'),
     mkdirp = require('mkdirp'),
     path = require('path'),
     args = require('optimist').argv,
-    config = grunt.config.get('environment') === 'travis' ?
-        require(__dirname + '/protractor-travis.conf').config :
-        require(__dirname + '/protractor-base.conf').config;
+    config = require(__dirname + '/protractor-base.conf').config;
 
 config.framework = 'jasmine2';
 
