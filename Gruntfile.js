@@ -27,6 +27,50 @@ module.exports = function (grunt) {
         }
     };
 
+    var jasmine2 = {
+            options: {
+                collectorPort: 0,
+                coverageDir: '<%=config.paths.results%>/protractor-coverage/jasmine2',
+                args: {
+                    params: {
+                        resultsDir: '<%=config.paths.results%>/protractor/jasmine2',
+                        testDir: '<%=config.paths.test%>/protractor'
+                    },
+                    baseUrl: 'http://<%=config.hosts.fqdn%>:<%= connect.test.options.port %>',
+                    specs: [
+                        '<%=config.paths.test%>/protractor/specs/**/*.spec.js'
+                    ]
+                }
+            },
+            configFile: '<%=config.paths.test%>/protractor/config/protractor-jasmine2.conf.js'
+        },
+        cucumber = {
+            options: {
+                collectorPort: 0,
+                noInject: true,
+                coverageDir: '<%=config.paths.results%>/protractor-coverage/cucumber',
+                args: {
+                    params: {
+                        resultsDir: '<%=config.paths.results%>/protractor/cucumber',
+                        testDir: '<%=config.paths.test%>/protractor',
+                        collectorPort: 0
+                    },
+                    baseUrl: 'http://<%=config.hosts.fqdn%>:<%= connect.test.options.port %>',
+                    specs: [
+                        '<%=config.paths.test%>/protractor/specs/**/*.feature'
+                    ]
+                }
+            },
+            configFile: '<%=config.paths.test%>/protractor/config/protractor-cucumber.conf.js'
+        };
+
+    var jasmine2local = jasmine2,
+        cucumberlocal = cucumber;
+
+    jasmine2local.options.args.seleniumAddress = '<%=config.hosts.seleniumAddress%>';
+    cucumberlocal.options.args.seleniumAddress = '<%=config.hosts.seleniumAddress%>';
+
+
     grunt.initConfig({
         config: config,
         clean: {
@@ -65,13 +109,16 @@ module.exports = function (grunt) {
             },
             protractorJasmine: {
                 targets: [
-                    'protractor_coverage.jasmine2.options.collectorPort'
+                    'protractor_coverage.jasmine2.options.collectorPort',
+                    'protractor_coverage.jasmine2local.options.collectorPort'
                 ]
             },
             protractorCucumber: {
                 targets: [
                     'protractor_coverage.cucumber.options.collectorPort',
-                    'protractor_coverage.cucumber.options.args.params.collectorPort'
+                    'protractor_coverage.cucumberlocal.options.collectorPort',
+                    'protractor_coverage.cucumber.options.args.params.collectorPort',
+                    'protractor_coverage.cucumberlocal.options.args.params.collectorPort'
                 ]
             }
         },
@@ -163,44 +210,10 @@ module.exports = function (grunt) {
                 keepAlive: true,
                 noColor: false
             },
-            jasmine2: {
-                options: {
-                    collectorPort: 0,
-                    coverageDir: '<%=config.paths.results%>/protractor-coverage/jasmine2',
-                    args: {
-                        seleniumAddress: '<%=config.hosts.seleniumAddress%>',
-                        params: {
-                            resultsDir: '<%=config.paths.results%>/protractor/jasmine2',
-                            testDir: '<%=config.paths.test%>/protractor'
-                        },
-                        baseUrl: 'http://<%=config.hosts.fqdn%>:<%= connect.test.options.port %>',
-                        specs: [
-                            '<%=config.paths.test%>/protractor/specs/**/*.spec.js'
-                        ]
-                    }
-                },
-                configFile: '<%=config.paths.test%>/protractor/config/protractor-jasmine2.conf.js'
-            },
-            cucumber: {
-                options: {
-                    collectorPort: 0,
-                    noInject: true,
-                    coverageDir: '<%=config.paths.results%>/protractor-coverage/cucumber',
-                    args: {
-                        seleniumAddress: '<%=config.hosts.seleniumAddress%>',
-                        params: {
-                            resultsDir: '<%=config.paths.results%>/protractor/cucumber',
-                            testDir: '<%=config.paths.test%>/protractor',
-                            collectorPort: 0
-                        },
-                        baseUrl: 'http://<%=config.hosts.fqdn%>:<%= connect.test.options.port %>',
-                        specs: [
-                            '<%=config.paths.test%>/protractor/specs/**/*.feature'
-                        ]
-                    }
-                },
-                configFile: '<%=config.paths.test%>/protractor/config/protractor-cucumber.conf.js'
-            }
+            jasmine2local: jasmine2local,
+            jasmine2travis: jasmine2,
+            cucumberlocal: cucumberlocal,
+            cucumbertravis: cucumber
         },
         makeReport: {
             src: '<%=config.paths.results%>/protractor-coverage/**/*.json',
@@ -233,25 +246,30 @@ module.exports = function (grunt) {
         'ngApimock'
     ]);
 
-    grunt.registerTask('test', 'Execute tests.', [
-        'force:on',
-        'jshint',
-        'karma',
-        'instrument',
-        'connect:test',
-        'protractor_coverage',
-        'makeReport',
-        'force:reset'
-    ]);
+    grunt.registerTask('test', 'Execute tests.', function(environment) {
+        if(environment === undefined) {
+            environment = 'local';
+        }
+
+        grunt.task.run([
+            'force:on',
+            'jshint',
+            'karma',
+            'instrument',
+            'connect:test',
+            'protractor_coverage:jasmine2' +environment,
+            'protractor_coverage:cucumber' +environment,
+            'makeReport',
+            'force:reset'
+        ]);
+    });
 
     grunt.registerTask('default', 'Default task', [
         'local'
     ]);
 
-    grunt.registerTask('environment', 'Set the environment', function(environment) {
-        grunt.log.writeln(grunt.config.get('environment'));
+    grunt.registerTask('environment', 'Set the environment', function (environment) {
         grunt.config.set('environment', environment);
-        grunt.log.writeln(grunt.config.get('environment'));
     });
 
     grunt.registerTask('local', 'Run tests locally', [
@@ -261,7 +279,7 @@ module.exports = function (grunt) {
     grunt.registerTask('travis', 'Run tests on Travis CI', [
         'prepare',
         'environment:travis',
-        'test'
+        'test:travis'
     ]);
 
 };

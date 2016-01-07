@@ -1,21 +1,11 @@
 var grunt = require('grunt'),
-    environment = grunt.config.get('environment'),
     path = require('path'),
-    config = require(__dirname + '/protractor-base.conf').config;
+    config = grunt.config.get('environment') === 'travis' ?
+        require(__dirname + '/protractor-travis.conf').config :
+        require(__dirname + '/protractor-base.conf').config;
 
 config.framework = 'custom';
 config.frameworkPath = require.resolve('protractor-cucumber-framework');
-
-if (environment === 'travis') {
-    delete config.seleniumAddress;
-    config.sauceUser = process.env.SAUCE_USERNAME;
-    config.sauceKey = process.env.SAUCE_ACCESS_KEY;
-
-    config.multiCapabilities.forEach(function (capability) {
-        capability['tunnel-identifier'] = process.env.TRAVIS_JOB_NUMBER;
-        capability['build'] = process.env.TRAVIS_BUILD_NUMBER;
-    });
-}
 
 config.onPrepare = function () {
     // Disable animations so e2e tests run more quickly
