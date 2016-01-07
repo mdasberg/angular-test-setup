@@ -1,4 +1,5 @@
 var grunt = require('grunt'),
+    environment = grunt.config.get('environment'),
     path = require('path'),
     config = require(__dirname + '/protractor-base.conf').config;
 
