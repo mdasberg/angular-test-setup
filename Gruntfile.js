@@ -65,17 +65,28 @@ module.exports = function (grunt) {
             configFile: '<%=config.paths.test%>/protractor/config/protractor-cucumber.conf.js'
         };
 
-    var jasmine2local = lodash.clone(jasmine2),
-        jasmine2travis = lodash.clone(jasmine2),
-        cucumberlocal = lodash.clone(cucumber),
-        cucumbertravis = lodash.clone(cucumber);
-
-    jasmine2local.options.args.seleniumAddress = '<%=config.hosts.seleniumAddress%>';
-    jasmine2local.configFile= '<%=config.paths.test%>/protractor/config/protractor-jasmine2.conf.js';
-    jasmine2travis.configFile= '<%=config.paths.test%>/protractor/config/protractor-jasmine2.travis.conf.js';
-    cucumberlocal.options.args.seleniumAddress = '<%=config.hosts.seleniumAddress%>';
-    cucumberlocal.configFile= '<%=config.paths.test%>/protractor/config/protractor-cucumber.conf.js',
-    cucumbertravis.configFile= '<%=config.paths.test%>/protractor/config/protractor-cucumber.travis.conf.js';
+    var jasmine2local = lodash.merge({}, {
+        options: {
+            args: {
+                seleniumAddress: '<%=config.hosts.seleniumAddress%>'
+            }
+        },
+        configFile: '<%=config.paths.test%>/protractor/config/protractor-jasmine2.conf.js'
+    }, jasmine2),
+        jasmine2travis = lodash.merge({}, {
+            configFile: '<%=config.paths.test%>/protractor/config/protractor-jasmine2.travis.conf.js'
+        }, jasmine2),
+        cucumberlocal = lodash.merge({}, {
+            options: {
+                args: {
+                    seleniumAddress: '<%=config.hosts.seleniumAddress%>'
+                }
+            },
+            configFile: '<%=config.paths.test%>/protractor/config/protractor-cucumber.conf.js'
+        }, cucumber),
+        cucumbertravis = lodash.merge({}, {
+            configFile: '<%=config.paths.test%>/protractor/config/protractor-cucumber.travis.conf.js'
+        }, cucumber);
 
     grunt.initConfig({
         config: config,
