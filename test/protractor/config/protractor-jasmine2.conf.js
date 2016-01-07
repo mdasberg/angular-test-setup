@@ -9,10 +9,9 @@ var jasmineReporters = require('jasmine-reporters'),
 config.framework = 'jasmine2';
 
 if(environment === 'travis') {
+    delete config.seleniumAddress;
     config.sauceUser = process.env.SAUCE_USERNAME;
     config.sauceKey = process.env.SAUCE_ACCESS_KEY;
-    config.sauceSeleniumAddress = 'localhost:4445/wd/hub';
-    delete config.seleniumAddress;
 
     config.multiCapabilities.forEach(function (capability) {
         capability['tunnel-identifier'] = process.env.TRAVIS_JOB_NUMBER;
