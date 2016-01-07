@@ -1,8 +1,6 @@
 var grunt = require('grunt'),
     path = require('path'),
-    config = grunt.config.get('environment') === 'travis' ?
-        require(__dirname + '/protractor-travis.conf').config :
-        require(__dirname + '/protractor-base.conf').config;
+    config = require(__dirname + '/protractor-base.conf').config;
 
 config.framework = 'custom';
 config.frameworkPath = require.resolve('protractor-cucumber-framework');
@@ -52,5 +50,5 @@ config.cucumberOpts = {
 };
 
 grunt.log.writeln( grunt.config.get('environment') === 'travis')
-grunt.log.writeln(config);
+grunt.log.writeln(JSON.stringify(config));
 exports.config = config;
