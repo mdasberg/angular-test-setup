@@ -19,7 +19,7 @@ module.exports = function (grunt) {
             tmp: tmp,
             src: 'src',
             test: 'test',
-            results: tmp + '/results',
+            results: 'results',
             instrumented: tmp + '/instrumented',
             config: 'config',
             build: 'dist'
@@ -30,7 +30,8 @@ module.exports = function (grunt) {
         config: config,
         clean: {
             files: [
-                '<%=config.paths.tmp%>'
+                '<%=config.paths.tmp%>',
+                '<%=config.paths.results%>',
             ]
         },
         instrument: {
