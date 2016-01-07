@@ -6,10 +6,15 @@ var grunt = require('grunt'),
 config.framework = 'custom';
 config.frameworkPath = require.resolve('protractor-cucumber-framework');
 
-if(environment === 'travis') {
+if (environment === 'travis') {
     config.sauceUser = process.env.SAUCE_USERNAME;
     config.sauceKey = process.env.SAUCE_ACCESS_KEY;
     delete config.seleniumAddress;
+
+    config.multiCapabilities.forEach(function (capability) {
+        capability['tunnel-identifier'] = process.env.TRAVIS_JOB_NUMBER;
+        capability['build'] = process.env.TRAVIS_BUILD_NUMBER;
+    });
 }
 
 config.onPrepare = function () {
