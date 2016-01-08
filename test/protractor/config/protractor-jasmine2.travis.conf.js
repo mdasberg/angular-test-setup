@@ -1,3 +1,4 @@
+var path = require('path');
 exports.config = {
     allScriptsTimeout: 11000,
 
@@ -21,6 +22,7 @@ exports.config = {
     }],
 
     onPrepare: function () {
+        global.ngApimock = require(path.resolve('.') + '/.tmp/mocking/protractor.mock');
     },
     onCleanUp: function () {
     },
