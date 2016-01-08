@@ -31,11 +31,9 @@ describe('Unhappy flow', function () {
 
         it('should not add a todo', function () {
             expect(page.todos.count()).toBe(0);
+            ngApimock.selectScenario(require(basePath + '/test/mocks/api-todos-all.json'), 'oops');
 
-            page.actions.add('another todo').then(function () {
-                ngApimock.selectScenario(require(basePath + '/test/mocks/api-todos-all.json'), 'oops');
-            });
-
+            page.actions.add('another todo');
             expect(page.todos.count()).toBe(0);
         });
 
