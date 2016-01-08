@@ -1,11 +1,37 @@
-var config = require(__dirname + '/protractor-jasmine2.conf').config;
+exports.config = {
+    allScriptsTimeout: 11000,
 
-config.sauceUser = process.env['SAUCE_USERNAME'];
-config.sauceKey = process.env['SAUCE_ACCESS_KEY'];
+    baseUrl: 'http://localhost:9900/',
 
-config.multiCapabilities.forEach(function (capability) {
-    capability['tunnel-identifier'] = process.env.TRAVIS_JOB_NUMBER;
-    capability['build'] = process.env.TRAVIS_BUILD_NUMBER;
-});
+    framework: 'jasmine2',
 
-exports.config = config;
+    params: {
+        environment: 'BUILD'
+    },
+    sauceUser: process.env.SAUCE_USERNAME,
+    sauceKey: process.env.SAUCE_ACCESS_KEY,
+
+    multiCapabilities: [{
+        'browserName': 'chrome',
+        'name': 'ngApimock - protractor',
+        'tunnel-identifier': process.env.TRAVIS_JOB_NUMBER,
+        'build': process.env.TRAVIS_BUILD_NUMBER,
+        'shardTestFiles': true,
+        'maxInstances': 10
+    }],
+
+    onPrepare: function () {
+    },
+    onCleanUp: function () {
+    },
+    beforeLaunch: function () {
+    },
+    afterLaunch: function () {
+    },
+    jasmineNodeOpts: {
+        isVerbose: true,
+        showColors: true,
+        includeStackTrace: false,
+        defaultTimeoutInterval: 40000
+    }
+};

@@ -43,7 +43,7 @@ module.exports = function (grunt) {
                     ]
                 }
             },
-            configFile: '<%=config.paths.test%>/protractor/config/protractor-jasmine2.conf.js'
+            configFile: '<%=config.paths.test%>/protractor/config/protractor-jasmine2.travis.conf.js'
         },
         cucumber = {
             options: {
@@ -86,7 +86,7 @@ module.exports = function (grunt) {
         }, cucumber),
         cucumbertravis = lodash.merge({}, {
             configFile: '<%=config.paths.test%>/protractor/config/protractor-cucumber.travis.conf.js'
-        }, cucumber);
+        }, {});
 
     grunt.initConfig({
         config: config,
@@ -126,16 +126,16 @@ module.exports = function (grunt) {
             },
             protractorJasmine: {
                 targets: [
-                    'protractor.jasmine2.options.collectorPort',
-                    'protractor.jasmine2local.options.collectorPort'
+                    'protractor_coverage.jasmine2.options.collectorPort',
+                    'protractor_coverage.jasmine2local.options.collectorPort'
                 ]
             },
             protractorCucumber: {
                 targets: [
-                    'protractor.cucumber.options.collectorPort',
-                    'protractor.cucumberlocal.options.collectorPort',
-                    'protractor.cucumber.options.args.params.collectorPort',
-                    'protractor.cucumberlocal.options.args.params.collectorPort'
+                    'protractor_coverage.cucumber.options.collectorPort',
+                    'protractor_coverage.cucumberlocal.options.collectorPort',
+                    'protractor_coverage.cucumber.options.args.params.collectorPort',
+                    'protractor_coverage.cucumberlocal.options.args.params.collectorPort'
                 ]
             }
         },
@@ -222,13 +222,13 @@ module.exports = function (grunt) {
                 configFile: '<%=config.paths.test %>/karma/config/karma.conf.js'
             }
         },
-        protractor: {
+        protractor_coverage: {
             options: {
                 keepAlive: true,
                 noColor: false
             },
             jasmine2local: jasmine2local,
-            jasmine2travis: jasmine2travis,
+            jasmine2travis: jasmine2,
             cucumberlocal: cucumberlocal,
             cucumbertravis: cucumbertravis
         },
@@ -274,8 +274,8 @@ module.exports = function (grunt) {
             'karma',
             'instrument',
             'connect:test',
-            'protractor:jasmine2' +environment,
-            'protractor:cucumber' +environment,
+            'protractor_coverage:jasmine2' +environment,
+            //'protractor_coverage:cucumber' +environment,
             'makeReport',
             'force:reset'
         ]);
