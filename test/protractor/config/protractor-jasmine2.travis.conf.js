@@ -7,7 +7,6 @@ exports.config = {
     framework: 'jasmine2',
 
     params: {
-        environment: 'BUILD'
     },
     sauceUser: process.env.SAUCE_USERNAME,
     sauceKey: process.env.SAUCE_ACCESS_KEY,
