@@ -28,3 +28,6 @@ config.jasmineNodeOpts = {
     includeStackTrace: true,
     defaultTimeoutInterval: 40000
 };
+
+
+exports.config = config;
