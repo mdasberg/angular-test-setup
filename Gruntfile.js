@@ -103,16 +103,16 @@ module.exports = function (grunt) {
             },
             protractorJasmine: {
                 targets: [
-                    'protractor_coverage.jasmine2.options.collectorPort',
-                    'protractor_coverage.jasmine2local.options.collectorPort'
+                    'protractor_coverage.jasmine2local.options.collectorPort',
+                    'protractor_coverage.jasmine2travis.options.collectorPort'
                 ]
             },
             protractorCucumber: {
                 targets: [
-                    'protractor_coverage.cucumber.options.collectorPort',
                     'protractor_coverage.cucumberlocal.options.collectorPort',
-                    'protractor_coverage.cucumber.options.args.params.collectorPort',
-                    'protractor_coverage.cucumberlocal.options.args.params.collectorPort'
+                    'protractor_coverage.cucumbertravis.options.collectorPort',
+                    'protractor_coverage.cucumberlocal.options.args.params.collectorPort',
+                    'protractor_coverage.cucumbertravis.options.args.params.collectorPort'
                 ]
             }
         },
