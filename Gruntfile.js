@@ -126,16 +126,16 @@ module.exports = function (grunt) {
             },
             protractorJasmine: {
                 targets: [
-                    'protractor_coverage.jasmine2.options.collectorPort',
-                    'protractor_coverage.jasmine2local.options.collectorPort'
+                    'protractor.jasmine2.options.collectorPort',
+                    'protractor.jasmine2local.options.collectorPort'
                 ]
             },
             protractorCucumber: {
                 targets: [
-                    'protractor_coverage.cucumber.options.collectorPort',
-                    'protractor_coverage.cucumberlocal.options.collectorPort',
-                    'protractor_coverage.cucumber.options.args.params.collectorPort',
-                    'protractor_coverage.cucumberlocal.options.args.params.collectorPort'
+                    'protractor.cucumber.options.collectorPort',
+                    'protractor.cucumberlocal.options.collectorPort',
+                    'protractor.cucumber.options.args.params.collectorPort',
+                    'protractor.cucumberlocal.options.args.params.collectorPort'
                 ]
             }
         },
@@ -222,7 +222,7 @@ module.exports = function (grunt) {
                 configFile: '<%=config.paths.test %>/karma/config/karma.conf.js'
             }
         },
-        protractor_coverage: {
+        protractor: {
             options: {
                 keepAlive: true,
                 noColor: false
@@ -274,8 +274,8 @@ module.exports = function (grunt) {
             'karma',
             'instrument',
             'connect:test',
-            'protractor_coverage:jasmine2' +environment,
-            'protractor_coverage:cucumber' +environment,
+            'protractor:jasmine2' +environment,
+            'protractor:cucumber' +environment,
             'makeReport',
             'force:reset'
         ]);

@@ -63,6 +63,7 @@
     "grunt-ng-apimock": "0.1.1",
     "grunt-port-pick": "^1.5.1",
     "grunt-protractor-coverage": "^0.2.15",
+    "grunt-protractor-runner": "^3.0.0",
     "istanbul": "^0.4.1",
     "jasmine-reporters": "^2.1.1",
     "jshint-stylish": "^2.1.0",
