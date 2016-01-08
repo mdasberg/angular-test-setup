@@ -36,8 +36,6 @@
                 coverageReporter: {
                     reporters: [
                         {type: 'lcov', dir: 'results/karma/coverage'},
-                        {type: 'html', dir: 'results/karma/coverage'},
-                        {type: 'json', dir: 'results/karma/coverage'}
                     ]
                 },
                 colors: true,
