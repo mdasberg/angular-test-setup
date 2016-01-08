@@ -28,7 +28,23 @@ module.exports = function (grunt) {
         }
     };
 
-    var
+    var jasmine2 = {
+            options: {
+                collectorPort: 0,
+                coverageDir: '<%=config.paths.results%>/protractor-coverage/jasmine2',
+                args: {
+                    params: {
+                        resultsDir: '<%=config.paths.results%>/protractor/jasmine2',
+                        testDir: '<%=config.paths.test%>/protractor'
+                    },
+                    baseUrl: 'http://<%=config.hosts.fqdn%>:<%= connect.test.options.port %>',
+                    specs: [
+                        '<%=config.paths.test%>/protractor/specs/**/*.spec.js'
+                    ]
+                }
+            },
+            configFile: '<%=config.paths.test%>/protractor/config/protractor-jasmine2.travis.conf.js'
+        },
         cucumber = {
             options: {
                 collectorPort: 0,
@@ -48,19 +64,6 @@ module.exports = function (grunt) {
             },
             configFile: '<%=config.paths.test%>/protractor/config/protractor-cucumber.conf.js'
         };
-
-        //,
-        //cucumberlocal = lodash.merge({}, {
-        //    options: {
-        //        args: {
-        //            seleniumAddress: '<%=config.hosts.seleniumAddress%>'
-        //        }
-        //    },
-        //    configFile: '<%=config.paths.test%>/protractor/config/protractor-cucumber.conf.js'
-        //}, cucumber),
-        //cucumbertravis = lodash.merge({}, {
-        //    configFile: '<%=config.paths.test%>/protractor/config/protractor-cucumber.travis.conf.js'
-        //}, {});
 
     grunt.initConfig({
         config: config,
@@ -201,47 +204,28 @@ module.exports = function (grunt) {
                 keepAlive: true,
                 noColor: false
             },
-            jasmine2local: {
+            jasmine2local: lodash.merge({}, jasmine2, {
                 options: {
-                    collectorPort: 0,
-                    noInject: true,
-                    coverageDir: '<%=config.paths.results%>/protractor-coverage/cucumber',
                     args: {
                         seleniumAddress: '<%=config.hosts.seleniumAddress%>'
-                        params: {
-                            resultsDir: '<%=config.paths.results%>/protractor/cucumber',
-                            testDir: '<%=config.paths.test%>/protractor',
-                            collectorPort: 0
-                        },
-                        baseUrl: 'http://<%=config.hosts.fqdn%>:<%= connect.test.options.port %>',
-                        specs: [
-                            '<%=config.paths.test%>/protractor/specs/**/*.feature'
-                        ]
+                    }
+                },
+                configFile: '<%=config.paths.test%>/protractor/config/protractor-jasmine2.conf.js'
+            }),
+            jasmine2travis: lodash.merge({}, jasmine2, {
+                configFile: '<%=config.paths.test%>/protractor/config/protractor-jasmine2.travis.conf.js'
+            }),
+            cucumberlocal: lodash.merge({}, cucumber, {
+                options: {
+                    args: {
+                        seleniumAddress: '<%=config.hosts.seleniumAddress%>'
                     }
                 },
                 configFile: '<%=config.paths.test%>/protractor/config/protractor-cucumber.conf.js'
-            },
-            jasmine2travis: {
-                options: {
-                    collectorPort: 0,
-                    noInject: true,
-                    coverageDir: '<%=config.paths.results%>/protractor-coverage/cucumber',
-                    args: {
-                        params: {
-                            resultsDir: '<%=config.paths.results%>/protractor/cucumber',
-                            testDir: '<%=config.paths.test%>/protractor',
-                            collectorPort: 0
-                        },
-                        baseUrl: 'http://<%=config.hosts.fqdn%>:<%= connect.test.options.port %>',
-                        specs: [
-                            '<%=config.paths.test%>/protractor/specs/**/*.feature'
-                        ]
-                    }
-                },
+            }),
+            cucumbertravis: lodash.merge({}, cucumber, {
                 configFile: '<%=config.paths.test%>/protractor/config/protractor-cucumber.travis.conf.js'
-            },
-            cucumberlocal: cucumber,
-            cucumbertravis: cucumber
+            })
         },
         makeReport: {
             src: '<%=config.paths.results%>/protractor-coverage/**/*.json',
@@ -274,8 +258,8 @@ module.exports = function (grunt) {
         'ngApimock'
     ]);
 
-    grunt.registerTask('test', 'Execute tests.', function(environment) {
-        if(environment === undefined) {
+    grunt.registerTask('test', 'Execute tests.', function (environment) {
+        if (environment === undefined) {
             environment = 'local';
         }
 
@@ -285,7 +269,7 @@ module.exports = function (grunt) {
             'karma',
             'instrument',
             'connect:test',
-            'protractor_coverage:jasmine2' +environment,
+            'protractor_coverage:jasmine2' + environment,
             //'protractor_coverage:cucumber' +environment,
             'makeReport',
             'force:reset'

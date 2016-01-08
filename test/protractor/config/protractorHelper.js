@@ -42,6 +42,12 @@
         provideNgApimock: function() {
             global.ngApimock = require(path.resolve('.') + '/.tmp/mocking/protractor.mock');
         },
+        provideChai: function() {
+            var chai = require('chai');
+            chai.use(require('chai-as-promised'));
+            global.chai = chai;
+            global.expect = chai.expect;
+        },
         addJasmineReporter: function() {
             return browser.getProcessedConfig().then(function (config) {
                 // you could use other properties here if you want, such as platform and version
