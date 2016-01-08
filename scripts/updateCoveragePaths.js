@@ -1,6 +1,6 @@
 (function () {
     var path = require('path'),
-        fs = require('fs-extra'),
+        fs = require('fs'),
         glob = require('glob');
 
     var validExit = false;
@@ -28,6 +28,4 @@
     });
 
     exit(0);
-
-
 })();

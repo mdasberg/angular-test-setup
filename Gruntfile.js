@@ -242,6 +242,11 @@ module.exports = function (grunt) {
             html: {
                 files: ['<%=config.paths.src%>/index.html']
             }
+        },
+        shell: {
+            target: {
+                command: 'node scripts/updateCoveragePaths.js'
+            }
         }
     });
 
@@ -272,6 +277,7 @@ module.exports = function (grunt) {
             'protractor_coverage:jasmine2' + environment,
             'protractor_coverage:cucumber' +environment,
             'makeReport',
+            'shell',
             'force:reset'
         ]);
     });
