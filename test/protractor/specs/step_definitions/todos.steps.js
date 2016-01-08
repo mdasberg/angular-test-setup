@@ -4,6 +4,8 @@ module.exports = function () {
         TodoPage = require('../../po/todoPage.po'),
         page;
 
+    this.setDefaultTimeout(60 * 1000);
+
     this.Given(/^I have todos$/, function (callback) {
         ngApimock.selectScenario(require(basePath + '/test/mocks/api-todos-all.json'), 'initial');
         ngApimock.addMockModule();
@@ -242,6 +244,4 @@ module.exports = function () {
             callback();
         });
     });
-
-
 };
