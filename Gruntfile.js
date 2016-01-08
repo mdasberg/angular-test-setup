@@ -43,7 +43,7 @@ module.exports = function (grunt) {
                     ]
                 }
             },
-            configFile: '<%=config.paths.test%>/protractor/config/protractor-jasmine2.travis.conf.js'
+            configFile: '<%=config.paths.test%>/protractor/config/protractor-jasmine2.conf.js'
         },
         cucumber = {
             options: {
@@ -75,18 +75,19 @@ module.exports = function (grunt) {
     }, jasmine2),
         jasmine2travis = lodash.merge({}, {
             configFile: '<%=config.paths.test%>/protractor/config/protractor-jasmine2.travis.conf.js'
-        }, jasmine2),
-        cucumberlocal = lodash.merge({}, {
-            options: {
-                args: {
-                    seleniumAddress: '<%=config.hosts.seleniumAddress%>'
-                }
-            },
-            configFile: '<%=config.paths.test%>/protractor/config/protractor-cucumber.conf.js'
-        }, cucumber),
-        cucumbertravis = lodash.merge({}, {
-            configFile: '<%=config.paths.test%>/protractor/config/protractor-cucumber.travis.conf.js'
-        }, {});
+        }, jasmine2);
+        //,
+        //cucumberlocal = lodash.merge({}, {
+        //    options: {
+        //        args: {
+        //            seleniumAddress: '<%=config.hosts.seleniumAddress%>'
+        //        }
+        //    },
+        //    configFile: '<%=config.paths.test%>/protractor/config/protractor-cucumber.conf.js'
+        //}, cucumber),
+        //cucumbertravis = lodash.merge({}, {
+        //    configFile: '<%=config.paths.test%>/protractor/config/protractor-cucumber.travis.conf.js'
+        //}, {});
 
     grunt.initConfig({
         config: config,
@@ -228,9 +229,9 @@ module.exports = function (grunt) {
                 noColor: false
             },
             jasmine2local: jasmine2local,
-            jasmine2travis: jasmine2,
-            cucumberlocal: cucumberlocal,
-            cucumbertravis: cucumbertravis
+            jasmine2travis: jasmine2travis,
+            cucumberlocal: cucumber,
+            cucumbertravis: cucumber
         },
         makeReport: {
             src: '<%=config.paths.results%>/protractor-coverage/**/*.json',
