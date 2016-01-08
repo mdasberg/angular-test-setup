@@ -270,7 +270,7 @@ module.exports = function (grunt) {
             'instrument',
             'connect:test',
             'protractor_coverage:jasmine2' + environment,
-            //'protractor_coverage:cucumber' +environment,
+            'protractor_coverage:cucumber' +environment,
             'makeReport',
             'force:reset'
         ]);
