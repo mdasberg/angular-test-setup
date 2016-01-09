@@ -30,7 +30,8 @@
                 return success(testData);
             });
 
-            controller = $controller('TodoController', {
+            // should fail
+            controller2 = $controller('TodoController', {
                 $scope: $scope,
                 todoService: todoService,
                 $q: $q
