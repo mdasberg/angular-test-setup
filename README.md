@@ -1,7 +1,7 @@
 # angular-test-setup 
 [![Build Status](https://travis-ci.org/mdasberg/angular-test-setup.svg?branch=master)](https://travis-ci.org/mdasberg/angular-test-setup) [![npm version](https://img.shields.io/node/v/angular-test-setup.svg)](https://github.com/mdasberg/angular-test-setup) [![dependency Status](https://img.shields.io/david/mdasberg/angular-test-setup.svg)](https://david-dm.org/mdasberg/angular-test-setup) [![devDependency Status](https://img.shields.io/david/dev/mdasberg/angular-test-setup.svg)](https://david-dm.org/mdasberg/angular-test-setup#info=devDependencies)
 
-> A simple AngularJS application with a complete test setup
+> A simple AngularJS application with a complete test setup for Karma and Protractor using both Jasmine2 and Cucumber.
 
 ## Getting Started
 
