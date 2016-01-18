@@ -40,7 +40,7 @@
             browser.addMockModule('disableCssAnimate', disableCssAnimate);
         },
         provideNgApimock: function() {
-            global.ngApimock = require(path.resolve('.') + '/.tmp/mocking/protractor.mock');
+            global.ngApimock = require(path.resolve('.') + '/mocking/protractor.mock');
         },
         provideChai: function() {
             var chai = require('chai');

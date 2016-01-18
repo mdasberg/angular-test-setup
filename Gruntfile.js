@@ -22,6 +22,7 @@ module.exports = function (grunt) {
             src: 'src',
             test: 'test',
             results: 'results',
+            mocking: 'mocking',
             instrumented: tmp + '/instrumented',
             config: 'config',
             build: 'dist'
@@ -70,6 +71,7 @@ module.exports = function (grunt) {
         clean: {
             files: [
                 '<%=config.paths.tmp%>',
+                '<%=config.paths.mocking%>',
                 '<%=config.paths.results%>',
             ]
         },
@@ -130,7 +132,7 @@ module.exports = function (grunt) {
                         grunt.log.ok('Mocking has been enabled and can located at /mocking');
                         return [
                             connect().use('/node_modules', serveStatic(__dirname + '/node_modules')),
-                            connect().use('/mocking', serveStatic(config.paths.tmp + '/mocking')),
+                            connect().use('/mocking', serveStatic(config.paths.mocking)),
                             connect().use('/', serveStatic(config.paths.test + '/protractor')),
                             connect().use('/', serveStatic(config.paths.src)),
                             connect().use('/', serveStatic(config.paths.tmp))
@@ -145,7 +147,7 @@ module.exports = function (grunt) {
                     middleware: function (connect) {
                         return [
                             connect().use('/node_modules', serveStatic(__dirname + '/node_modules')),
-                            connect().use('/mocking', serveStatic(config.paths.tmp + '/mocking')),
+                            connect().use('/mocking', serveStatic(config.paths.mocking)),
                             connect().use('/js', serveStatic(config.paths.instrumented + '/src/js')),
                             connect().use('/', serveStatic(config.paths.src)),
                             connect().use('/', serveStatic(config.paths.test + '/protractor')),
@@ -167,7 +169,7 @@ module.exports = function (grunt) {
         },
         ngApimock: {
             options: {
-                defaultOutputDir: '<%= config.paths.tmp %>/mocking',
+                defaultOutputDir: '<%= config.paths.mocking %>',
                 defaultPassThrough: []
             },
             mock: {
