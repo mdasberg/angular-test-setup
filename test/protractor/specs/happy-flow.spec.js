@@ -37,8 +37,6 @@ describe('Happy flow', function () {
 
         page.actions.add('another todo');
         expect(page.todos.count()).toBe(4);
-
-
     });
 
     it('should archive completed todo', function () {

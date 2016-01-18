@@ -51,20 +51,17 @@ var Actions = function (el) {
 Actions.prototype = Object.create({}, {
     add: {
         value: function (description) {
-            var addElement = this.el.element(by.buttonText('add'));
-            return this.el.element(by.model('vm.description')).clear().sendKeys(description).then(function () {
-                return addElement.click();
-            });
+            return this.el.element(by.model('vm.description')).clear().sendKeys(description,  protractor.Key.ENTER);
         }
     },
     archive: {
         value: function () {
-            return this.el.element(by.linkText('archive')).click();
+            return this.el.element(by.linkText('Clear completed')).click();
         }
     },
     refresh: {
         value: function () {
-            return this.el.element(by.linkText('refresh')).click();
+            return this.el.element(by.linkText('Refresh')).click();
         }
     },
 });
