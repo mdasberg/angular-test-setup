@@ -1,3 +1,9 @@
+<a name="0.1.2"></a>
+# 0.1.2 (2016-01-27)
+
+- Update dependencies
+- Fix coverage path to be included in npm package
+
 <a name="0.1.1"></a>
 # 0.1.1 (2016-01-18)
 
