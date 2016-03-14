@@ -5,24 +5,50 @@ Feature: Todo application
 
   Scenario: The api response for fetching the todos is not ok
     Given an error occurred while fetching the todos
-    Then the total number of todos should be 0
-    And the total number of remaining uncompleted todos should be 0
-    And the total number of completed but unarchived todos should be 0
+
+  Scenario Outline: Verify information
+    Then the total number of todos is <numberOfTodos>
+    And the total number of remaining uncompleted todos is <numberOfUncompletedTodos>
+    And the total number of completed but unarchived todos is <numberOfUnarchivedTodos>
+    Examples:
+      | numberOfTodos | numberOfUncompletedTodos | numberOfUnarchivedTodos |
+      | 0             | 0                        | 0                       |
+
 
   Scenario: The api response for adding a todo is not ok
     Given an error occurred while adding a todo
-    Then the total number of todos should be 0
-    And the total number of remaining uncompleted todos should be 0
-    And the total number of completed but unarchived todos should be 0
+    When I add the todo
+
+  Scenario Outline: Verify information
+    Then the total number of todos is <numberOfTodos>
+    And the total number of remaining uncompleted todos is <numberOfUncompletedTodos>
+    And the total number of completed but unarchived todos is <numberOfUnarchivedTodos>
+    Examples:
+      | numberOfTodos | numberOfUncompletedTodos | numberOfUnarchivedTodos |
+      | 3             | 2                        | 1                       |
+
 
   Scenario: The api response for archiving a todo is not ok
     Given an error occurred while archiving a todo
-    Then the total number of todos should not update
-    And the total number of remaining uncompleted todos should not be updated
-    And the total number of completed but unarchived todos should not be updated
+    When I archive the todos
+
+  Scenario Outline: Verify information
+    Then the total number of todos is <numberOfTodos>
+    And the total number of remaining uncompleted todos is <numberOfUncompletedTodos>
+    And the total number of completed but unarchived todos is <numberOfUnarchivedTodos>
+    Examples:
+      | numberOfTodos | numberOfUncompletedTodos | numberOfUnarchivedTodos |
+      | 3             | 2                        | 1                       |
+
 
   Scenario: The api response for marking a todo as completed is not ok
     Given an error occurred while completing a todo
-    Then the total number of todos should not update
-    And the total number of remaining uncompleted todos should not be updated
-    And the total number of completed but unarchived todos should not be updated
+    When I check the todo as completed
+
+  Scenario Outline: Verify information
+    Then the total number of todos is <numberOfTodos>
+    And the total number of remaining uncompleted todos is <numberOfUncompletedTodos>
+    And the total number of completed but unarchived todos is <numberOfUnarchivedTodos>
+    Examples:
+      | numberOfTodos | numberOfUncompletedTodos | numberOfUnarchivedTodos |
+      | 3             | 2                        | 1                       |
