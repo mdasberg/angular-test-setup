@@ -89,7 +89,7 @@ module.exports = function (grunt) {
             },
             connectSource: {
                 targets: [
-                    'connect.source.options.port'
+                    'connect.runtime.options.port'
                 ]
             },
             connectTest: {
