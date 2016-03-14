@@ -11,8 +11,15 @@ module.exports = function () {
 
     this.setDefaultTimeout(60 * 1000);
 
+    var mockData = {
+        todos: require(basePath + '/test/mocks/api-todos-all.json'),
+        addTodo: require(basePath + '/test/mocks/api-todos-post.json'),
+        updateTodo: require(basePath + '/test/mocks/api-todos-put.json'),
+        deleteTodo: require(basePath + '/test/mocks/api-todos-delete.json')
+    };
+
     this.Given(/^I have todos$/, function (callback) {
-        ngApimock.selectScenario(require(basePath + '/test/mocks/api-todos-all.json'), 'initial');
+        ngApimock.selectScenario(mockData.todos, 'initial');
         ngApimock.addMockModule();
 
         browser.get('/');
@@ -21,8 +28,8 @@ module.exports = function () {
     });
 
     this.Given(/^I have new todo$/, function (callback) {
-        ngApimock.selectScenario(require(basePath + '/test/mocks/api-todos-all.json'), 'initial');
-        ngApimock.selectScenario(require(basePath + '/test/mocks/api-todos-post.json'), 'success');
+        ngApimock.selectScenario(mockData.todos, 'initial');
+        ngApimock.selectScenario(mockData.addTodo, 'success');
         ngApimock.addMockModule();
 
         browser.get('/');
@@ -30,8 +37,8 @@ module.exports = function () {
     });
 
     this.Given(/^I have completed todos that has not been archived yet$/, function (callback) {
-        ngApimock.selectScenario(require(basePath + '/test/mocks/api-todos-all.json'), 'afterAdd');
-        ngApimock.selectScenario(require(basePath + '/test/mocks/api-todos-delete.json'), 'success');
+        ngApimock.selectScenario(mockData.todos, 'afterAdd');
+        ngApimock.selectScenario(mockData.deleteTodo, 'success');
         ngApimock.addMockModule();
 
         browser.get('/');
@@ -39,8 +46,8 @@ module.exports = function () {
     });
 
     this.Given(/^I have completed a todo$/, function (callback) {
-        ngApimock.selectScenario(require(basePath + '/test/mocks/api-todos-all.json'), 'afterArchive');
-        ngApimock.selectScenario(require(basePath + '/test/mocks/api-todos-put.json'), 'success');
+        ngApimock.selectScenario(mockData.todos, 'afterArchive');
+        ngApimock.selectScenario(mockData.updateTodo, 'success');
         ngApimock.addMockModule();
 
         browser.get('/');
@@ -48,7 +55,7 @@ module.exports = function () {
     });
 
     this.Given(/^an error occurred while fetching the todos$/, function (callback) {
-        ngApimock.selectScenario(require(basePath + '/test/mocks/api-todos-all.json'), 'oops');
+        ngApimock.selectScenario(mockData.todos, 'oops');
         ngApimock.addMockModule();
 
         browser.get('/');
@@ -57,8 +64,8 @@ module.exports = function () {
     });
 
     this.Given(/^an error occurred while adding a todo$/, function (callback) {
-        ngApimock.selectScenario(require(basePath + '/test/mocks/api-todos-all.json'), 'initial');
-        ngApimock.selectScenario(require(basePath + '/test/mocks/api-todos-post.json'), 'oops');
+        ngApimock.selectScenario(mockData.todos, 'initial');
+        ngApimock.selectScenario(mockData.addTodo, 'oops');
         ngApimock.addMockModule();
 
         configuration.afterAdd = 'initial';
@@ -69,8 +76,8 @@ module.exports = function () {
     });
 
     this.Given(/^an error occurred while archiving a todo$/, function (callback) {
-        ngApimock.selectScenario(require(basePath + '/test/mocks/api-todos-all.json'), 'initial');
-        ngApimock.selectScenario(require(basePath + '/test/mocks/api-todos-delete.json'), 'oops');
+        ngApimock.selectScenario(mockData.todos, 'initial');
+        ngApimock.selectScenario(mockData.deleteTodo, 'oops');
         ngApimock.addMockModule();
 
         configuration.afterArchive = 'initial';
@@ -81,8 +88,8 @@ module.exports = function () {
     });
 
     this.Given(/^an error occurred while completing a todo$/, function (callback) {
-        ngApimock.selectScenario(require(basePath + '/test/mocks/api-todos-all.json'), 'initial');
-        ngApimock.selectScenario(require(basePath + '/test/mocks/api-todos-put.json'), 'oops');
+        ngApimock.selectScenario(mockData.todos, 'initial');
+        ngApimock.selectScenario(mockData.updateTodo, 'oops');
         ngApimock.addMockModule();
 
         configuration.afterCheck = 'initial';
@@ -94,21 +101,21 @@ module.exports = function () {
 
     this.When(/^I add the todo$/, function (callback) {
 
-        ngApimock.selectScenario(require(basePath + '/test/mocks/api-todos-all.json'), configuration.afterAdd);
+        ngApimock.selectScenario(mockData.todos, configuration.afterAdd);
         page.actions.add('another todo').then(function () {
             callback();
         });
     });
 
     this.When(/^I archive the todos$/, function (callback) {
-        ngApimock.selectScenario(require(basePath + '/test/mocks/api-todos-all.json'), configuration.afterArchive);
+        ngApimock.selectScenario(mockData.todos, configuration.afterArchive);
         page.actions.archive().then(function () {
             callback();
         });
     });
 
     this.When(/^I check the todo as completed$/, function (callback) {
-        ngApimock.selectScenario(require(basePath + '/test/mocks/api-todos-all.json'), configuration.afterCheck);
+        ngApimock.selectScenario(mockData.todos, configuration.afterCheck);
         page.todos.get(2).check().then(function () {
             callback();
         });
