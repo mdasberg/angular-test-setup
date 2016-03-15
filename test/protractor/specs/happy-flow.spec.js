@@ -13,7 +13,7 @@ describe('Happy flow', function () {
         ngApimock.selectScenario(require(basePath + '/test/mocks/api-todos-put.json'), 'success');
         ngApimock.addMockModule();
         browser.get('/');
-        page = new TodoPage(element(by.id('todo')));
+        page = new TodoPage();
     });
 
     it('should show all todos', function () {

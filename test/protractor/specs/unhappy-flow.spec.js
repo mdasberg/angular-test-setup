@@ -13,7 +13,7 @@ describe('Unhappy flow', function () {
         ngApimock.selectScenario(require(basePath + '/test/mocks/api-todos-delete.json'), 'oops');
         ngApimock.addMockModule();
         browser.get('/');
-        page = new TodoPage(element(by.id('todo')));
+        page = new TodoPage();
     });
 
     describe('when the backend returns anything other than a status 200', function() {

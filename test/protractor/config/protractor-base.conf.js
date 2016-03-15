@@ -13,6 +13,16 @@
                 },
                 shardTestFiles: true,
                 maxInstances: 10
+            //},
+            //{
+            //    'browserName': 'safari',
+            //    shardTestFiles: true,
+            //    maxInstances: 10
+            //},
+            //{
+            //    'browserName': 'firefox',
+            //    shardTestFiles: true,
+            //    maxInstances: 10
             }
         ],
         params: {},

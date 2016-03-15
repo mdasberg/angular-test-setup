@@ -2,11 +2,10 @@
 
 /**
  * PageObject is an API for the Todo.
- * @param locator The locator of the todo
  * @constructor
  */
-var TodoPage = function (el) {
-    this.el = el;
+var TodoPage = function () {
+    this.el = element(by.id('todo'));
 };
 
 TodoPage.prototype = Object.create({}, {

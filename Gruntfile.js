@@ -172,6 +172,27 @@ module.exports = function (grunt) {
                             connect().use('/js', serveStatic(config.paths.instrumented + '/src/js')),
                             connect().use('/', serveStatic(config.paths.src)),
                             connect().use('/', serveStatic(config.paths.test + '/protractor')),
+                            connect().use('/api/todos', function(request, response, next){
+                                response.writeHead(200, {'Content-Type': 'application/json' });
+                                if(request.method === 'GET') {
+                                    response.end(JSON.stringify([
+                                        {
+                                            "description": "a",
+                                            "completed": false
+                                        },
+                                        {
+                                            "description": "b",
+                                            "completed": true
+                                        },
+                                        {
+                                            "description": "c",
+                                            "completed": false
+                                        }
+                                    ]));
+                                } else if(request.method === 'POST') {
+                                    response.end();
+                                }
+                            })
                         ];
                     }
                 }
