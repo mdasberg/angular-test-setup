@@ -135,7 +135,28 @@ module.exports = function (grunt) {
                             connect().use('/mocking', serveStatic(config.paths.mocking)),
                             connect().use('/', serveStatic(config.paths.test + '/protractor')),
                             connect().use('/', serveStatic(config.paths.src)),
-                            connect().use('/', serveStatic(config.paths.tmp))
+                            connect().use('/', serveStatic(config.paths.tmp)),
+                            connect().use('/api/todos', function(request, response, next){
+                                response.writeHead(200, {'Content-Type': 'application/json' });
+                                if(request.method === 'GET') {
+                                    response.end(JSON.stringify([
+                                        {
+                                            "description": "a",
+                                            "completed": false
+                                        },
+                                        {
+                                            "description": "b",
+                                            "completed": true
+                                        },
+                                        {
+                                            "description": "c",
+                                            "completed": false
+                                        }
+                                    ]));
+                                } else if(request.method === 'POST') {
+                                    response.end();
+                                }
+                            })
                         ];
                     }
                 }
@@ -272,11 +293,11 @@ module.exports = function (grunt) {
 
         grunt.task.run([
             'force:on',
-            'jshint',
-            'karma',
+            //'jshint',
+            //'karma',
             'instrument',
             'connect:test',
-            'protractor_coverage:jasmine2' + environment,
+            //'protractor_coverage:jasmine2' + environment,
             'protractor_coverage:cucumber' +environment,
             'makeReport',
             'shell',
