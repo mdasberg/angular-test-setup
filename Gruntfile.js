@@ -314,11 +314,11 @@ module.exports = function (grunt) {
 
         grunt.task.run([
             'force:on',
-            //'jshint',
-            //'karma',
+            'jshint',
+            'karma',
             'instrument',
             'connect:test',
-            //'protractor_coverage:jasmine2' + environment,
+            'protractor_coverage:jasmine2' + environment,
             'protractor_coverage:cucumber' +environment,
             'makeReport',
             'shell',
