@@ -1,3 +1,9 @@
+<a name="0.1.3"></a>
+# 0.1.3 (2016-03-16)
+
+- Update dependencies
+- Updated cucumber tests
+
 <a name="0.1.2"></a>
 # 0.1.2 (2016-01-27)
 
