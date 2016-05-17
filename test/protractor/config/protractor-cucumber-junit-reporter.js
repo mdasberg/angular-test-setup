@@ -81,7 +81,7 @@ var reporterHooks = function () {
     // output testResult
     this.registerHandler('AfterFeatures', function (event, callback) {
         browser.getCapabilities().then(function (cap) {
-            var browserName = cap.caps_.browserName;
+            var browserName = cap.get('browserName');
             var xml = junit(JSON.stringify(testResult), {indent: '    '});
             var destination = browser.params.resultsDir + '/' + browserName + '/results-' + testResult[testResult.length - 1].fileName + '.xml';
             fs.ensureFileSync(destination);
