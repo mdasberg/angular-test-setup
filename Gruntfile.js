@@ -139,7 +139,7 @@
                             ]
                         }
                     },
-                    configFile: 'test/protractor/config/protractor-cucumber-travis.conf.js'
+                    configFile: 'test/protractor/config/protractor-cucumber.travis.conf.js'
                 }
             },
             makeReport: {
