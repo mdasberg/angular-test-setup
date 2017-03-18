@@ -207,11 +207,9 @@
         ]);
 
         grunt.registerTask('local', 'Run tests locally', [
-            'prepare',
             'test'
         ]);
         grunt.registerTask('travis', 'Run tests on Travis CI', [
-            'prepare',
             'test:travis'
         ]);
     };
