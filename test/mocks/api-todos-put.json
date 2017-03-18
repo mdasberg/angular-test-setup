@@ -1,9 +1,10 @@
 {
   "expression": "/api/todos",
+  "name": "Update todo",
   "method": "PUT",
   "responses": {
-    "passThrough": {},
     "success": {
+      "default": true,
       "status": 200
     },
     "oops": {

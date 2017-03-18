@@ -1,9 +1,10 @@
 {
   "expression": "api/todos.*",
+  "name": "Delete todo",
   "method": "DELETE",
   "responses": {
-    "passThrough": {},
     "success": {
+      "default": true,
       "status": 200
     },
     "oops": {

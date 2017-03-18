@@ -1,7 +1,5 @@
-var config = require(__dirname + '/protractor-base.conf').config;
+var config = require(__dirname + '/protractor-cucumber.conf').config;
 
-config.framework = 'custom';
-config.frameworkPath = require.resolve('protractor-cucumber-framework');
 config.sauceUser = process.env.SAUCE_USERNAME;
 config.sauceKey = process.env.SAUCE_ACCESS_KEY;
 
@@ -13,23 +11,5 @@ config.multiCapabilities =[{
     'shardTestFiles': true,
     'maxInstances': 10
 }];
-
-config.onPrepare = function () {
-    var helper = require('./protractorHelper');
-    helper.disableNgAnimate();
-    helper.disableCssAnimate();
-    helper.provideNgApimock();
-    helper.provideChai();
-};
-
-config.cucumberOpts = {
-    require: [
-        process.cwd() + '/test/protractor/**/step_definitions/*.steps.js',
-        process.cwd() + '/test/protractor/**/support/*.js',
-        __dirname + '/protractor-coverage-cucumber-after-hooks.js',
-        __dirname + '/protractor-cucumber-junit-reporter.js'
-    ],
-    format: 'summary'
-};
 
 exports.config = config;

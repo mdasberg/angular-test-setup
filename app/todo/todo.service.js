@@ -1,9 +1,13 @@
-(function() {
+(function () {
     'use strict';
 
+    /** Service which is responsible for communicating with the rest api.*/
+    angular
+        .module('todo')
+        .factory('todoService', TodoService);
+
     function TodoService($resource) {
-        return $resource('/api/todos', {
-        }, {
+        return $resource('/api/todos', {}, {
             get: {
                 method: 'GET',
                 isArray: true
@@ -11,7 +15,7 @@
             add: {
                 method: 'POST'
             },
-            update: {
+            complete: {
                 method: 'PUT'
             },
             archive: {
@@ -21,11 +25,4 @@
     }
 
     TodoService.$inject = ['$resource'];
-
-    /**
-     * Service which is responsible for communicating with the rest api.
-     */
-    angular
-        .module('todo')
-        .factory('todoService', TodoService);
 })();

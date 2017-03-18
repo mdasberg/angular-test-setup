@@ -1,346 +1,219 @@
-'use strict';
+(function () {
+    'use strict';
 
-module.exports = function (grunt) {
+    module.exports = function (grunt) {
+        require('load-grunt-tasks')(grunt);
+        require('time-grunt')(grunt);
+        const serveStatic = require('serve-static');
 
-    require('load-grunt-tasks')(grunt);
-    require('time-grunt')(grunt);
-
-    var serveStatic = require('serve-static'),
-        lodash = require('lodash'),
-        path = require('path'),
-        tmp = '.tmp';
-
-    var config = {
-        environment: 'local',
-        hosts: {
-            runtime: 'localhost',
-            fqdn: 'localhost',
-            seleniumAddress: 'http://localhost:4444/wd/hub'
-        },
-        paths: {
-            tmp: tmp,
-            src: 'src',
-            test: 'test',
-            results: 'results',
-            mocking: 'mocking',
-            instrumented: tmp + '/instrumented',
-            config: 'config',
-            build: 'dist'
-        }
-    };
-
-    var jasmine2 = {
-            options: {
-                collectorPort: 0,
-                coverageDir: '<%=config.paths.results%>/protractor-coverage/jasmine2',
-                args: {
-                    params: {
-                        resultsDir: '<%=config.paths.results%>/protractor/jasmine2',
-                        testDir: '<%=config.paths.test%>/protractor'
-                    },
-                    baseUrl: 'http://<%=config.hosts.fqdn%>:<%= connect.test.options.port %>',
-                    specs: [
-                        '<%=config.paths.test%>/protractor/specs/**/*.spec.js'
+        grunt.initConfig({
+            clean: {
+                mocking: ['.mocking'],
+                results: ['.results'],
+                instrumented: ['.instrumented']
+            },
+            portPick: {
+                options: {
+                    port: 9900,
+                    limit: 9
+                },
+                connectRuntime: {
+                    targets: [
+                        'connect.runtime.options.port'
+                    ]
+                },
+                connectTest: {
+                    targets: [
+                        'connect.test.options.port'
+                    ]
+                },
+                protractorCucumber: {
+                    targets: [
+                        'protractor_coverage.cucumberlocal.options.collectorPort',
+                        'protractor_coverage.cucumberlocal.options.args.params.collectorPort',
+                        'protractor_coverage.cucumbertravis.options.collectorPort',
+                        'protractor_coverage.cucumbertravis.options.args.params.collectorPort'
                     ]
                 }
             },
-            configFile: '<%=config.paths.test%>/protractor/config/protractor-jasmine2.travis.conf.js'
-        },
-        cucumber = {
-            options: {
-                collectorPort: 0,
-                noInject: true,
-                coverageDir: '<%=config.paths.results%>/protractor-coverage/cucumber',
-                args: {
-                    params: {
-                        resultsDir: '<%=config.paths.results%>/protractor/cucumber',
-                        testDir: '<%=config.paths.test%>/protractor',
-                        collectorPort: 0
-                    },
-                    baseUrl: 'http://<%=config.hosts.fqdn%>:<%= connect.test.options.port %>',
-                    specs: [
-                        '<%=config.paths.test%>/protractor/specs/**/*.feature'
-                    ]
+            ngApimock: {
+                options: {
+                    defaultOutputDir: '.mocking',
+                    defaultPassThrough: []
+                },
+                mock: {
+                    src: 'test/mocks',
+                    moduleName: 'todo'
                 }
             },
-            configFile: '<%=config.paths.test%>/protractor/config/protractor-cucumber.conf.js'
-        };
-
-    grunt.initConfig({
-        config: config,
-        clean: {
-            files: [
-                '<%=config.paths.tmp%>',
-                '<%=config.paths.mocking%>',
-                '<%=config.paths.results%>',
-            ]
-        },
-        instrument: {
-            files: '<%=config.paths.src%>/**/*.js',
-            options: {
-                basePath: '<%=config.paths.instrumented%>',
-                lazy: false
-            }
-        },
-        portPick: {
-            options: {
-                port: 9900,
-                limit: 9
-            },
-            connectSource: {
-                targets: [
-                    'connect.runtime.options.port'
-                ]
-            },
-            connectTest: {
-                targets: [
-                    'connect.test.options.port'
-                ]
+            connect: {
+                options: {
+                    hostname: '*'
+                },
+                runtime: {
+                    options: {
+                        port: 0,
+                        open: true,
+                        livereload: 0,
+                        middleware: function (connect) {
+                            grunt.log.ok('Mocking has been enabled and can located at /mocking');
+                            return [
+                                connect().use('/node_modules', serveStatic('node_modules')),
+                                connect().use('/mocking', serveStatic('.mocking')),
+                                connect().use('/', serveStatic('app')),
+                                connect().use(require('ng-apimock/lib/utils').ngApimockRequest)
+                            ];
+                        }
+                    }
+                },
+                test: {
+                    options: {
+                        port: 0,
+                        open: false,
+                        middleware: function (connect) {
+                            return [
+                                connect().use('/node_modules', serveStatic('node_modules')),
+                                connect().use('/', serveStatic('.instrumented/app')),
+                                connect().use('/', serveStatic('app')),
+                                connect().use('/', serveStatic('test/protractor')),
+                                connect().use(require('ng-apimock/lib/utils').ngApimockRequest)
+                            ];
+                        }
+                    }
+                }
             },
             watch: {
-                targets: [
-                    'watch.options.livereload',
-                    'connect.source.options.livereload',
-                ]
-            },
-            protractorJasmine: {
-                targets: [
-                    'protractor_coverage.jasmine2local.options.collectorPort',
-                    'protractor_coverage.jasmine2travis.options.collectorPort'
-                ]
-            },
-            protractorCucumber: {
-                targets: [
-                    'protractor_coverage.cucumberlocal.options.collectorPort',
-                    'protractor_coverage.cucumbertravis.options.collectorPort',
-                    'protractor_coverage.cucumberlocal.options.args.params.collectorPort',
-                    'protractor_coverage.cucumbertravis.options.args.params.collectorPort'
-                ]
-            }
-        },
-        connect: {
-            options: {
-                hostname: '*',
-                useAvailablePort: true
-            },
-            runtime: {
-                options: {
-                    port: 0,
-                    open: true,
-                    livereload: 0,
-                    middleware: function (connect) {
-                        grunt.log.ok('Mocking has been enabled and can located at /mocking');
-                        return [
-                            connect().use('/node_modules', serveStatic(__dirname + '/node_modules')),
-                            connect().use('/mocking', serveStatic(config.paths.mocking)),
-                            connect().use('/', serveStatic(config.paths.test + '/protractor')),
-                            connect().use('/', serveStatic(config.paths.src)),
-                            connect().use('/', serveStatic(config.paths.tmp)),
-                            connect().use('/api/todos', function(request, response, next){
-                                response.writeHead(200, {'Content-Type': 'application/json' });
-                                if(request.method === 'GET') {
-                                    response.end(JSON.stringify([
-                                        {
-                                            "description": "a",
-                                            "completed": false
-                                        },
-                                        {
-                                            "description": "b",
-                                            "completed": true
-                                        },
-                                        {
-                                            "description": "c",
-                                            "completed": false
-                                        }
-                                    ]));
-                                } else if(request.method === 'POST') {
-                                    response.end();
-                                }
-                            })
-                        ];
-                    }
-                }
-            },
-            test: {
-                options: {
-                    port: 0,
-                    open: false,
-                    middleware: function (connect) {
-                        return [
-                            connect().use('/node_modules', serveStatic(__dirname + '/node_modules')),
-                            connect().use('/mocking', serveStatic(config.paths.mocking)),
-                            connect().use('/js', serveStatic(config.paths.instrumented + '/src/js')),
-                            connect().use('/', serveStatic(config.paths.src)),
-                            connect().use('/', serveStatic(config.paths.test + '/protractor')),
-                            connect().use('/api/todos', function(request, response, next){
-                                response.writeHead(200, {'Content-Type': 'application/json' });
-                                if(request.method === 'GET') {
-                                    response.end(JSON.stringify([
-                                        {
-                                            "description": "a",
-                                            "completed": false
-                                        },
-                                        {
-                                            "description": "b",
-                                            "completed": true
-                                        },
-                                        {
-                                            "description": "c",
-                                            "completed": false
-                                        }
-                                    ]));
-                                } else if(request.method === 'POST') {
-                                    response.end();
-                                }
-                            })
-                        ];
-                    }
-                }
-            },
-            distribution: {
-                options: {
-                    port: 0,
-                    open: true,
-                    middleware: function (connect) {
-                        return [
-                            connect().use('/', serveStatic(config.paths.dist))
-                        ];
-                    }
-                }
-            }
-        },
-        ngApimock: {
-            options: {
-                defaultOutputDir: '<%= config.paths.mocking %>',
-                defaultPassThrough: []
-            },
-            mock: {
-                src: '<%=config.paths.test %>/mocks',
-                moduleName: 'todo',
-                dependencies: {
-                    angular: '/node_modules/angular/angular.js'
-                }
-            }
-        },
-        jshint: {
-            report: {
-                options: {
-                    jshintrc: '.jshintrc',
-                    reporter: require('jshint-stylish')
+                js: {
+                    files: ['src/{,*/}*.js']
                 },
-                files: {
-                    src: ['<%= config.paths.src %>/**/*.js']
+                html: {
+                    files: ['src/index.html']
+                }
+            },
+            instrument: {
+                files: 'app/**/*.js',
+                options: {
+                    basePath: '.instrumented',
+                    lazy: false
+                }
+            },
+            protractor_coverage: {
+                options: {
+                    keepAlive: true,
+                    noColor: false
+                },
+                cucumberlocal: {
+                    options: {
+                        collectorPort: 0,
+                        noInject: true, // needed for cucumber
+                        coverageDir: '.results/protractor-coverage/cucumber',
+                        args: {
+                            seleniumAddress: 'http://localhost:4444/wd/hub',
+                            params: {
+                                resultsDir: '.results/protractor/cucumber',
+                                testDir: 'test/protractor',
+                                collectorPort: 0
+                            },
+                            baseUrl: 'http://localhost:<%= connect.test.options.port %>',
+                            specs: [
+                                'app/**/*.feature'
+                            ]
+                        }
+                    },
+                    configFile: 'test/protractor/config/protractor-cucumber.conf.js'
+                },
+                cucumbertravis: {
+                    options: {
+                        collectorPort: 0,
+                        noInject: true, // needed for cucumber
+                        coverageDir: '.results/protractor-coverage/cucumber',
+                        args: {
+                            params: {
+                                resultsDir: '.results/protractor/cucumber',
+                                testDir: 'test/protractor',
+                                collectorPort: 0
+                            },
+                            baseUrl: 'http://localhost:<%= connect.test.options.port %>',
+                            specs: [
+                                'app/**/*.feature'
+                            ]
+                        }
+                    },
+                    configFile: 'test/protractor/config/protractor-cucumber-travis.conf.js'
+                }
+            },
+            makeReport: {
+                src: '.results/protractor-coverage/**/*.json',
+                options: {
+                    type: 'lcov',
+                    dir: '.results/protractor-coverage',
+                    print: 'detail'
+                }
+            },
+            jshint: {
+                report: {
+                    options: {
+                        jshintrc: '.jshintrc',
+                        reporter: require('jshint-stylish')
+                    },
+                    files: {
+                        src: ['app/**/*.js', '!app/**/*.spec.js', '!app/**/*.steps.js', '!app/**/*.po.js']
+                    }
+                }
+            },
+            karma: {
+                options: {
+                    singleRun: true,
+                    reporters: ['progress', 'coverage', 'junit']
+                },
+                unit: {
+                    basePath: process.cwd(),
+                    configFile: 'karma.conf.js'
                 }
             }
-        },
-        karma: {
-            options: {
-                singleRun: true,
-                reporters: ['progress', 'coverage', 'junit']
-            },
-            unit: {
-                basePath: process.cwd(),
-                configFile: '<%=config.paths.test %>/karma/config/karma.conf.js'
-            }
-        },
-        protractor_coverage: {
-            options: {
-                keepAlive: true,
-                noColor: false
-            },
-            jasmine2local: lodash.merge({}, jasmine2, {
-                options: {
-                    args: {
-                        seleniumAddress: '<%=config.hosts.seleniumAddress%>'
-                    }
-                },
-                configFile: '<%=config.paths.test%>/protractor/config/protractor-jasmine2.conf.js'
-            }),
-            jasmine2travis: lodash.merge({}, jasmine2, {
-                configFile: '<%=config.paths.test%>/protractor/config/protractor-jasmine2.travis.conf.js'
-            }),
-            cucumberlocal: lodash.merge({}, cucumber, {
-                options: {
-                    args: {
-                        seleniumAddress: '<%=config.hosts.seleniumAddress%>'
-                    }
-                },
-                configFile: '<%=config.paths.test%>/protractor/config/protractor-cucumber.conf.js'
-            }),
-            cucumbertravis: lodash.merge({}, cucumber, {
-                configFile: '<%=config.paths.test%>/protractor/config/protractor-cucumber.travis.conf.js'
-            })
-        },
-        makeReport: {
-            src: '<%=config.paths.results%>/protractor-coverage/**/*.json',
-            options: {
-                type: 'lcov',
-                dir: '<%=config.paths.results%>/protractor-coverage',
-                print: 'detail'
-            }
-        },
-        watch: {
-            js: {
-                files: ['<%=config.paths.src%>/{,*/}*.js']
-            },
-            html: {
-                files: ['<%=config.paths.src%>/index.html']
-            }
-        },
-        shell: {
-            target: {
-                command: 'node scripts/updateCoveragePaths.js'
-            }
-        }
-    });
+        });
 
-
-    grunt.registerTask('serve', 'Serve the app using the distribution .', [
-        'prepare',
-        'connect:runtime',
-        'watch'
-    ]);
-
-    grunt.registerTask('prepare', 'Prepare the build with all the necessary stuff.', [
-        'clean',
-        'portPick',
-        'ngApimock'
-    ]);
-
-    grunt.registerTask('test', 'Execute tests.', function (environment) {
-        if (environment === undefined) {
-            environment = 'local';
-        }
-
-        grunt.task.run([
-            'force:on',
-            'jshint',
-            'karma',
-            'instrument',
-            'connect:test',
-            'protractor_coverage:jasmine2' + environment,
-            'protractor_coverage:cucumber' +environment,
-            'makeReport',
-            'shell',
-            'force:reset'
+        grunt.registerTask('serve', 'Serve the app using the distribution .', [
+            'clean',
+            'portPick',
+            'ngApimock',
+            'connect:runtime',
+            'watch'
         ]);
-    });
 
-    grunt.registerTask('default', 'Default task', [
-        'local'
-    ]);
+        grunt.registerTask('test', 'Execute the tests.', function (environment) {
+            const DEFAULT_ENV = 'local';
+            if (environment === undefined) {
+                environment = DEFAULT_ENV;
+            }
 
-    grunt.registerTask('environment', 'Set the environment', function (environment) {
-        grunt.config.set('environment', environment);
-    });
+            grunt.task.run([
+                'clean',
+                'portPick',
+                'ngApimock',
+                'force:on',
+                'jshint',
+                'karma',
+                'instrument',
+                'connect:test',
+                'protractor_coverage:cucumber' + environment,
+                'makeReport',
+                'force:reset'
+            ]);
+        });
 
-    grunt.registerTask('local', 'Run tests locally', [
-        'prepare',
-        'test'
-    ]);
-    grunt.registerTask('travis', 'Run tests on Travis CI', [
-        'prepare',
-        'test:travis'
-    ]);
+        grunt.registerTask('default', 'Default task', [
+            'local'
+        ]);
 
-};
+        grunt.registerTask('local', 'Run tests locally', [
+            'prepare',
+            'test'
+        ]);
+        grunt.registerTask('travis', 'Run tests on Travis CI', [
+            'prepare',
+            'test:travis'
+        ]);
+    };
+
+})();

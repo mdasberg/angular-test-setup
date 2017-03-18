@@ -1,6 +1,6 @@
 (function () {
     'use strict';
-    
+
     module.exports = function (config) {
         config.set({
                 frameworks: ['jasmine'],
@@ -8,12 +8,15 @@
                     'node_modules/angular/angular.js',
                     'node_modules/angular-resource/angular-resource.js',
                     'node_modules/angular-mocks/angular-mocks.js',
-                    'src/js/*.js',
-                    'src/js/**/*.js',
-                    'src/partials/**/*.html',
-                    'test/karma/specs/**/*.js'
+                    'app/todo.module.js',
+                    'app/todo/*.js',
+                    'app/todo/*.tpl.html',
+                    'app/todo/*.spec.js'
                 ],
-                exclude: [],
+                exclude: [
+                    'app/todo/*.po.js',
+                    'app/todo/*.steps.js'
+                ],
                 plugins: [
                     'karma-jasmine',
                     'karma-junit-reporter',
@@ -23,19 +26,19 @@
                 ],
                 reporters: ['progress', 'coverage', 'junit'],
                 preprocessors: {
-                    'src/partials/**/*.html': 'ng-html2js',
-                    'src/**/*.js': 'coverage'
+                    'app/todo/*.tpl.html': 'ng-html2js',
+                    'app/**/*.js': 'coverage'
                 },
                 ngHtml2JsPreprocessor: {
-                    stripPrefix: 'src/',
+                    stripPrefix: 'app/',
                     moduleName: 'templateCache'
                 },
                 junitReporter: {
-                    outputDir: 'results/karma'
+                    outputDir: '.results/karma'
                 },
                 coverageReporter: {
                     reporters: [
-                        {type: 'lcov', dir: 'results/karma-coverage'},
+                        {type: 'lcov', dir: '.results/karma-coverage'},
                     ]
                 },
                 colors: true,

@@ -1,24 +1,39 @@
-var config = require(__dirname + '/protractor-base.conf').config;
+(function () {
+    'use strict';
 
-config.framework = 'custom';
-config.frameworkPath = require.resolve('protractor-cucumber-framework');
+    var path = require('path');
 
-config.onPrepare = function () {
-    var helper = require('./protractorHelper');
-    helper.disableNgAnimate();
-    helper.disableCssAnimate();
-    helper.provideNgApimock();
-    helper.provideChai();
-};
+    exports.config = {
+        allScriptsTimeout: 15000,
+        keepAlive: true,
 
-config.cucumberOpts = {
-    require: [
-        process.cwd() + '/test/protractor/**/step_definitions/*.steps.js',
-        process.cwd() + '/test/protractor/**/support/*.js',
-        __dirname + '/protractor-coverage-cucumber-after-hooks.js',
-        __dirname + '/protractor-cucumber-junit-reporter.js'
-    ],
-    format: 'summary'
-};
-
-exports.config = config;
+        multiCapabilities: [
+            {
+                'browserName': 'chrome',
+                'chromeOptions': {
+                    args: ['test-type', '--start-maximized'] // get rid of the ignore cert warning
+                },
+                shardTestFiles: true,
+                maxInstances: 10
+            }
+        ],
+        params: {},
+        framework: 'custom',
+        frameworkPath:require.resolve('protractor-cucumber-framework'),
+        onPrepare: function() {
+            var helper = require('./protractorHelper');
+            helper.disableNgAnimate();
+            helper.disableCssAnimate();
+            helper.provideNgApimock();
+            helper.provideChai();
+        },
+        cucumberOpts: {
+            require: [
+                path.join(process.cwd(), 'app','**', '*.steps.js'),
+                path.join(process.cwd(), 'test','protractor', 'config', 'protractor-cucumber-junit-reporter.js'),
+                path.join(process.cwd(), 'test', 'protractor', 'config', 'protractor-coverage-cucumber-after-hooks.js')
+            ],
+            format: 'pretty'
+        }
+    };
+})();

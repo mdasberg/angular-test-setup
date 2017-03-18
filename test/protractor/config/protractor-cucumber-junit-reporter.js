@@ -1,7 +1,6 @@
-var fs = require('fs-extra'),
-    junit = require('cucumberjs-junitxml'),
-    path = require('path');
-
+var fs = require('fs-extra');
+var junit = require('cucumberjs-junitxml');
+var path = require('path');
 var testResult = [];
 
 var reporterHooks = function () {
@@ -49,7 +48,7 @@ var reporterHooks = function () {
         var step = stepResult.getStep();
 
         var keyword = step.getKeyword();
-        if(keyword.trim() !== 'After' && keyword.trim() !== 'Before') { // Do not log Before and After
+        if (keyword.trim() !== 'After' && keyword.trim() !== 'Before') { // Do not log Before and After
             var stepOutput = {
                 name: step.getName(),
                 line: step.getLine(),
@@ -65,6 +64,7 @@ var reporterHooks = function () {
             if (stepOutput.result.status === undefined) {
                 stepOutput.result.status = 'failed';
                 var failureMessage = stepResult.getFailureException();
+                console.log('failureMessage', failureMessage)
                 if (failureMessage) {
                     stepOutput.result.error_message = (failureMessage.stack || failureMessage);
                 }
@@ -89,7 +89,6 @@ var reporterHooks = function () {
             fs.writeSync(file, xml);
             callback();
         });
-
     });
 };
 

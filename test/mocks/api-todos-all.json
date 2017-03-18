@@ -1,10 +1,11 @@
 
 {
   "expression": "/api/todos",
+  "name": "Get all todos",
   "method": "GET",
   "responses": {
-    "passThrough": {},
     "initial": {
+      "default": true,
       "data": [
         {
           "description": "do something",
@@ -56,7 +57,7 @@
         }
       ]
     },
-    "afterCheck": {
+    "afterCompleted": {
       "data": [
         {
           "description": "do something",

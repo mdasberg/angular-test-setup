@@ -1,0 +1,40 @@
+<section class="todoapp">
+    <header class="header">
+        <h1>todos</h1>
+        <form ng-submit="$ctrl.add()">
+            <input
+                    type="text"
+                    size="30"
+                    placeholder="What needs to be done?"
+                    autofocus
+                    class="new-todo"
+                    ng-model="$ctrl.description"/>
+        </form>
+    </header>
+    <!-- This section should be hidden by default and shown when there are todos -->
+    <section class="main">
+        <ul class="todo-list">
+            <li ng-repeat="todo in $ctrl.todos" ng-class="{completed: todo.completed}">
+                <input
+                        id="{{::todo.description}}"
+                        class="toggle"
+                        type="checkbox"
+                        ng-model="todo.completed"
+                        ng-click="$ctrl.complete()"/>
+                <label ng-bind="::todo.description"></label>
+            </li>
+        </ul>
+    </section>
+    <footer class="footer">
+        <span class="todo-count">
+            <strong ng-bind="$ctrl.uncompleted().length"></strong> of <span ng-bind="$ctrl.todos.length"></span> items left
+        </span>
+        <!-- Hidden if no completed items are left ↓ -->
+        <a href="" class="clear-completed" ng-click="$ctrl.archive()">Archive completed</a>
+    </footer>
+
+    <section><span ng-bind="$ctrl.error"></span></section>
+</section>
+
+
+
