@@ -5,6 +5,7 @@ scripts
 karma.conf.js
 Gruntfile.js
 protractor*
+!results/protractor*
 
 yarn.lock
 
