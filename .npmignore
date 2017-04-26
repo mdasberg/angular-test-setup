@@ -1,0 +1,12 @@
+.instrumented
+mocking
+scripts
+
+karma.conf.js
+Gruntfile.js
+protractor*
+
+yarn.lock
+
+.travis.yml
+.jshintrc

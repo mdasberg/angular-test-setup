@@ -19,8 +19,8 @@
         ],
         params: {},
         framework: 'custom',
-        frameworkPath:require.resolve('protractor-cucumber-framework'),
-        onPrepare: function() {
+        frameworkPath: require.resolve('protractor-cucumber-framework'),
+        onPrepare: function () {
             var helper = require('./protractorHelper');
             helper.disableNgAnimate();
             helper.disableCssAnimate();
@@ -29,10 +29,10 @@
         },
         cucumberOpts: {
             require: [
-                path.join(process.cwd(), 'app','**', '*.steps.js'),
-                path.join(process.cwd(), 'test','protractor', 'config', 'protractor-defaults.js'),
-                path.join(process.cwd(), 'test','protractor', 'config', 'protractor-cucumber-junit-reporter.js'),
-                path.join(process.cwd(), 'test', 'protractor', 'config', 'protractor-coverage-cucumber-after-hooks.js')
+                path.join(process.cwd(), 'app', '**', '*.steps.js'),
+                path.join(process.cwd(), 'protractor-defaults.js'),
+                path.join(process.cwd(), 'protractor-cucumber-junit-reporter.js'),
+                path.join(process.cwd(), 'protractor-coverage-cucumber-after-hooks.js')
             ],
             format: 'pretty'
         }

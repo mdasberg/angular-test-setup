@@ -8,8 +8,8 @@
 
         grunt.initConfig({
             clean: {
-                mocking: ['.mocking'],
-                results: ['.results'],
+                mocking: ['mocking'],
+                results: ['results'],
                 instrumented: ['.instrumented']
             },
             portPick: {
@@ -38,12 +38,10 @@
             },
             ngApimock: {
                 options: {
-                    defaultOutputDir: '.mocking',
-                    defaultPassThrough: []
+                    defaultOutputDir: 'mocking'
                 },
                 mock: {
-                    src: 'test/mocks',
-                    moduleName: 'todo'
+                    src: 'test/mocks'
                 }
             },
             connect: {
@@ -59,7 +57,7 @@
                             grunt.log.ok('Mocking has been enabled and can located at /mocking');
                             return [
                                 connect().use('/node_modules', serveStatic('node_modules')),
-                                connect().use('/mocking', serveStatic('.mocking')),
+                                connect().use('/mocking', serveStatic('mocking')),
                                 connect().use('/', serveStatic('app')),
                                 connect().use(require('ng-apimock/lib/utils').ngApimockRequest)
                             ];
@@ -106,11 +104,11 @@
                     options: {
                         collectorPort: 0,
                         noInject: true, // needed for cucumber
-                        coverageDir: '.results/protractor-coverage/cucumber',
+                        coverageDir: 'results/protractor-coverage/cucumber',
                         args: {
                             seleniumAddress: 'http://localhost:4444/wd/hub',
                             params: {
-                                resultsDir: '.results/protractor/cucumber',
+                                resultsDir: 'results/protractor/cucumber',
                                 testDir: 'test/protractor',
                                 collectorPort: 0
                             },
@@ -120,16 +118,16 @@
                             ]
                         }
                     },
-                    configFile: 'test/protractor/config/protractor-cucumber.conf.js'
+                    configFile: 'protractor-cucumber.conf.js'
                 },
                 cucumbertravis: {
                     options: {
                         collectorPort: 0,
                         noInject: true, // needed for cucumber
-                        coverageDir: '.results/protractor-coverage/cucumber',
+                        coverageDir: 'results/protractor-coverage/cucumber',
                         args: {
                             params: {
-                                resultsDir: '.results/protractor/cucumber',
+                                resultsDir: 'results/protractor/cucumber',
                                 testDir: 'test/protractor',
                                 collectorPort: 0
                             },
@@ -139,14 +137,14 @@
                             ]
                         }
                     },
-                    configFile: 'test/protractor/config/protractor-cucumber.travis.conf.js'
+                    configFile: 'protractor-cucumber.travis.conf.js'
                 }
             },
             makeReport: {
-                src: '.results/protractor-coverage/**/*.json',
+                src: 'results/protractor-coverage/**/*.json',
                 options: {
                     type: 'lcov',
-                    dir: '.results/protractor-coverage',
+                    dir: 'results/protractor-coverage',
                     print: 'detail'
                 }
             },

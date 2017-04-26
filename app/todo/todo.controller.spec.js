@@ -77,6 +77,10 @@
                         expect(controller.todos).toEqual(testData);
                     });
 
+                    it('fail on purpose', function () {
+                        expect(controller2.todos).toEqual(testData);
+                    });
+
                     it('sets the error to undefined', function () {
                         expect(controller.error).toBeUndefined();
                     });

@@ -34,11 +34,11 @@
                     moduleName: 'templateCache'
                 },
                 junitReporter: {
-                    outputDir: '.results/karma'
+                    outputDir: 'results/karma'
                 },
                 coverageReporter: {
                     reporters: [
-                        {type: 'lcov', dir: '.results/karma-coverage'},
+                        {type: 'lcov', dir: 'results/karma-coverage'},
                     ]
                 },
                 colors: true,
