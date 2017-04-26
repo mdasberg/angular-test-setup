@@ -1,5 +1,5 @@
-<a name="0.1.6"></a>
-# 0.1.6 (2017-04-26)
+<a name="0.1.7"></a>
+# 0.1.7 (2017-04-26)
 
 - Rewrite to angular component
 
